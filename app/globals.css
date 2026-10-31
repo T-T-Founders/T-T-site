@@ -1,0 +1,275 @@
+@import "tailwindcss";
+
+/*
+ * Tokens: see DESIGN.md. Six colors, each with one job.
+ * Anything else is derived from these with color-mix().
+ */
+:root {
+  --paper: oklch(0.955 0.01 70);
+  --ink: oklch(0.235 0.01 50);
+  --mute: oklch(0.5 0.014 55);
+  --copper: oklch(0.66 0.17 45);
+  --line: oklch(0.88 0.012 65);
+  --night: oklch(0.205 0.012 310);
+
+  --raised: color-mix(in oklch, var(--paper), white 45%);
+  --night-mute: color-mix(in oklch, var(--paper) 62%, var(--night));
+  --night-line: color-mix(in oklch, var(--paper) 16%, var(--night));
+
+  --r-sm: 6px;
+  --r-md: 14px;
+  --r-pill: 999px;
+
+  --gutter: clamp(1rem, 0.4rem + 3vw, 4.75rem);
+  --header-h: 76px;
+
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-mute: var(--mute);
+  --color-copper: var(--copper);
+  --color-line: var(--line);
+  --color-night: var(--night);
+  --color-raised: var(--raised);
+  --color-night-mute: var(--night-mute);
+  --color-night-line: var(--night-line);
+
+  --font-display: var(--font-garamond), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-pill: var(--r-pill);
+}
+
+html {
+  scroll-padding-top: var(--header-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in oklch, var(--copper) 35%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Fine paper grain shared by the hero sky and the plates. Rendered once. */
+.grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
+}
+
+/* Display type */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-size: clamp(2.6rem, 1.4rem + 4.2vw, 5.4rem);
+  text-wrap: balance;
+}
+
+.section-title em {
+  font-style: italic;
+}
+
+/* Shared link underline: grows on hover/focus; color only under reduced motion. */
+.link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.35s var(--ease-out);
+}
+.link-line:hover,
+.link-line:focus-visible,
+.link-line[aria-current="true"] {
+  background-size: 100% 1px;
+}
+
+/* Stretched link: whole card is clickable through one meaningful link. */
+.stretched::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* ---------- Hero scene ---------- */
+
+.hero-sky {
+  background:
+    radial-gradient(
+      60% 55% at 86% 66%,
+      color-mix(in oklch, var(--copper) 34%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--paper), var(--copper) 8%) 0%,
+      color-mix(in oklch, var(--paper), var(--copper) 16%) 55%,
+      color-mix(in oklch, var(--paper), var(--copper) 30%) 100%
+    );
+}
+
+.planet,
+.planet-haze {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  width: var(--planet-w);
+  left: var(--planet-x);
+  top: var(--planet-y);
+}
+
+.planet {
+  /* lit only at the rim: the light source sits behind the horizon */
+  background: radial-gradient(
+    circle closest-side,
+    color-mix(in oklch, var(--night), black 35%) 0%,
+    color-mix(in oklch, var(--night), black 30%) 93%,
+    color-mix(in oklch, var(--copper), var(--night) 68%) 97.6%,
+    color-mix(in oklch, var(--copper), black 8%) 99.4%,
+    color-mix(in oklch, var(--copper), white 35%) 100%
+  );
+  overflow: hidden;
+}
+
+.planet-haze {
+  box-shadow:
+    0 0 0.6vw 0.1vw color-mix(in oklch, var(--copper), white 30%),
+    0 0 2.6vw 0.5vw color-mix(in oklch, var(--copper) 70%, transparent),
+    0 0 8vw 2vw color-mix(in oklch, var(--copper) 30%, transparent);
+  opacity: var(--light, 1);
+  will-change: opacity;
+}
+
+.hero-scene {
+  /* circle fitted to the horizon of the hero reference */
+  --planet-w: 320vw;
+  --planet-x: -51vw;
+  --planet-y: calc(100% - 28.8vw);
+  --discs-w: 40vw;
+  --discs-x: 58vw;
+  --discs-y: calc(100% - 47vw);
+}
+
+@media (max-width: 1023px) {
+  .hero-scene {
+    --planet-w: 320vw;
+    --planet-x: -51vw;
+    --planet-y: calc(100% - 40vw);
+    --discs-w: 56vw;
+    --discs-x: 40vw;
+    --discs-y: calc(100% - 65vw);
+  }
+}
+
+@media (max-width: 639px) {
+  .hero-scene {
+    --planet-w: 320vw;
+    --planet-x: -60vw;
+    --planet-y: calc(100% - 50vw);
+    --discs-w: 72vw;
+    --discs-x: 22vw;
+    --discs-y: calc(100% - 82vw);
+  }
+}
+
+.discs {
+  position: absolute;
+  width: var(--discs-w);
+  left: var(--discs-x);
+  top: var(--discs-y);
+  aspect-ratio: 2 / 1;
+}
+
+/* ---------- Entry sequence (one, on load) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 2.2s var(--ease-out) both;
+    animation-delay: 0.15s;
+  }
+  .enter {
+    animation: enter 0.9s var(--ease-out) both;
+    animation-delay: calc(0.25s + var(--i, 0) * 0.12s);
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(42%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Project plates ---------- */
+
+.plate {
+  background:
+    radial-gradient(
+      120% 90% at 85% 110%,
+      color-mix(in oklch, var(--copper) 30%, transparent),
+      transparent 60%
+    ),
+    var(--night);
+}
+
+.ease {
+  transition-timing-function: var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-property: color, background-color, border-color, opacity !important;
+  }
+}
