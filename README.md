@@ -1,8 +1,8 @@
 # T&T Labs website
 
-The official site of T&T Labs: one page with the company, its three divisions
-(Skills, Applications, Games) and links to all eight projects, plus internal
-product pages for projects without their own website.
+The official site of T&T Labs: a home page with the team's philosophy, one page
+per division (Skills, Applications, Games) linking to all eight projects, and
+internal product pages for projects without their own website.
 
 - Product decisions: [`PRODUCT.md`](PRODUCT.md)
 - Design system, tokens, motion rules and the anti-slop audit: [`DESIGN.md`](DESIGN.md)
@@ -20,7 +20,10 @@ No animation library: the hero animation is ~100 lines in
 
 | Route | Content |
 |---|---|
-| `/` | Hero, About, Skills, Applications, Games |
+| `/` | Hero, philosophy |
+| `/skills` | Four agent skills, each linking to its GitHub repository |
+| `/applications` | IZDAR Industrial, VeloBoost, MyPC |
+| `/games` | Chernaya Tamga |
 | `/applications/veloboost` | VeloBoost product page |
 | `/applications/mypc` | MyPC product page |
 | `/games/chernaya-tamga` | Chernaya Tamga game page |
@@ -53,18 +56,13 @@ Preview on the Workers runtime locally:
 npm run preview
 ```
 
-### Automatic deploys (recommended)
+### Automatic deploys
 
-`.github/workflows/deploy.yml` deploys every push to `main`. In the GitHub repo,
-Settings > Secrets and variables > Actions, add:
-
-| Kind | Name | Value |
-|---|---|---|
-| Secret | `CLOUDFLARE_API_TOKEN` | API token from the *Edit Cloudflare Workers* template |
-| Secret | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
-| Variable | `SITE_URL` | e.g. `https://t-t-site.<subdomain>.workers.dev` |
-
-Until all three exist the workflow skips the deploy with a warning instead of failing.
+Cloudflare Workers Builds is connected to this repository and builds every push
+to `main` (production branch). In the Worker `t-t-site`, Settings > Build >
+Variables, set `NEXT_PUBLIC_SITE_URL` (e.g. `https://t-t-site.<subdomain>.workers.dev`
+or the custom domain); without it canonical links and the sitemap point at
+`http://localhost:3000`.
 
 ### Manual deploy
 
@@ -79,7 +77,7 @@ NEXT_PUBLIC_SITE_URL=https://t-t-site.<subdomain>.workers.dev npm run deploy
 ### Custom domain
 
 When the domain's zone is on the same Cloudflare account: add the `routes` entry
-shown in `wrangler.jsonc`, change `SITE_URL` to the domain, and redeploy.
+shown in `wrangler.jsonc`, change `NEXT_PUBLIC_SITE_URL` to the domain, and redeploy.
 
 ### Brand images
 
