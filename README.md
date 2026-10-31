@@ -38,7 +38,7 @@ npm run dev
 ## Deploy (Cloudflare Workers)
 
 The site is a static export (`output: "export"`, built into `out/`) served as
-Worker static assets by the Worker `tt-labs-site` (`wrangler.jsonc`). There is no
+Worker static assets by the Worker `t-t-site` (`wrangler.jsonc`). There is no
 server code. Unknown paths get `out/404.html` with a 404 status.
 `public/_headers` sets the security headers (CSP, HSTS, frame denial, etc.) and
 caching (`/_next/static/*` immutable for a year, HTML always revalidated).
@@ -62,7 +62,7 @@ Settings > Secrets and variables > Actions, add:
 |---|---|---|
 | Secret | `CLOUDFLARE_API_TOKEN` | API token from the *Edit Cloudflare Workers* template |
 | Secret | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
-| Variable | `SITE_URL` | e.g. `https://tt-labs-site.<subdomain>.workers.dev` |
+| Variable | `SITE_URL` | e.g. `https://t-t-site.<subdomain>.workers.dev` |
 
 Until all three exist the workflow skips the deploy with a warning instead of failing.
 
@@ -73,7 +73,7 @@ npx wrangler login
 ```
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://tt-labs-site.<subdomain>.workers.dev npm run deploy
+NEXT_PUBLIC_SITE_URL=https://t-t-site.<subdomain>.workers.dev npm run deploy
 ```
 
 ### Custom domain
