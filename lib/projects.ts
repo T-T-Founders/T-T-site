@@ -91,26 +91,4 @@ export const game = {
   href: "/games/chernaya-tamga",
 };
 
-/** The three divisions, each with its own page. Used by the home page and navigation. */
-export const divisions = [
-  {
-    id: "skills",
-    title: "Skills",
-    href: "/skills",
-    line: "Four open skills for AI coding agents.",
-  },
-  {
-    id: "applications",
-    title: "Applications",
-    href: "/applications",
-    line: "Software for Windows and industrial sites.",
-  },
-  {
-    id: "games",
-    title: "Games",
-    href: "/games",
-    line: "Chernaya Tamga, a dark fantasy in development.",
-  },
-] as const;
-
 export const orgGithub = "https://github.com/T-T-Founders";

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { game } from "@/lib/projects";
 import SectionTitle from "./SectionTitle";
-import FadeImage from "./FadeImage";
-import avenue from "@/public/images/games/tamga-avenue.jpg";
+import LazyMount from "./LazyMount";
+import { GamePlate } from "./Illustrations";
 
 export default function Games() {
   return (
@@ -12,14 +12,12 @@ export default function Games() {
 
         <div data-reveal className="mt-12 sm:mt-16">
           <article className="group press relative isolate overflow-hidden rounded-md has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-copper">
-            <div className="absolute inset-0 -z-20">
-              <FadeImage
-                src={avenue}
-                alt="Chernaya Tamga: the player walks down a dark Aktobe avenue under a violet, sunless sky."
-                sizes="(min-width: 1600px) 1450px, 100vw"
-                preload
-                className="card-art h-full w-full object-cover object-[60%_55%]"
-              />
+            <div className="absolute inset-0 -z-20 max-md:bottom-[42%]">
+              <LazyMount>
+                <div className="card-art absolute inset-0">
+                  <GamePlate />
+                </div>
+              </LazyMount>
             </div>
             <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,color-mix(in_oklch,var(--night)_92%,transparent)_0%,color-mix(in_oklch,var(--night)_70%,transparent)_38%,transparent_70%)] max-md:bg-[linear-gradient(0deg,color-mix(in_oklch,var(--night)_94%,transparent)_10%,color-mix(in_oklch,var(--night)_40%,transparent)_70%)]" />
             <div className="flex min-h-[460px] flex-col justify-end p-8 sm:min-h-[480px] sm:p-12 lg:min-h-[500px]">

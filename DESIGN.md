@@ -135,12 +135,14 @@ Four screens, as in the references. Home is the hero plus the team's
 philosophy; each division has its own route.
 
 ```
-/              hero: "We build tools, apps and games." + one button, the eclipse
+/              hero: "We build tools, apps and games." + one button (-> /skills)
                philosophy: "We started in college." + two sentences
-               three clean cards: Skills, Applications, Games -> their pages
+               nothing else: the divisions are reached from the header only
 /skills        "Skills for AI agents."  four plates -> GitHub
 /applications  "Software for Windows and industry."  IZDAR lead + two plates
-/games         night. "One game, in development."  one wide plate -> game page
+/games         night. "One game, in development."  one wide SVG plate -> game page
+               (eclipsed sun over Aktobe panel blocks; screenshots stay on the
+               game's own page)
 ```
 
 Copy rule (client): one heading, one sentence, a clean card, a click. No

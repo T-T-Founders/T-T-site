@@ -26,7 +26,7 @@ export default function Hero() {
           </h1>
           <div className="enter mt-10 sm:mt-12" style={{ ["--i" as string]: 3 }}>
             <Link
-              href="#projects"
+              href="/skills"
               className="group press inline-flex h-14 items-center gap-5 rounded-pill bg-ink pl-7 pr-6 text-[1rem] text-paper transition-colors duration-200 hover:bg-[color-mix(in_oklch,var(--ink),var(--copper)_28%)]"
             >
               View projects

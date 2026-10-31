@@ -289,3 +289,140 @@ export function MypcPlate() {
     </svg>
   );
 }
+
+/*
+ * Chernaya Tamga: Aktobe on the fortieth night. The sun is a black disc with a
+ * burning rim (the Black Khan swallowed it), panel blocks with a few lit
+ * windows, an empty avenue and one walker. Engaging the card flares the rim.
+ * Colors: the game's violet dusk, mixed from --night; copper from the tokens.
+ */
+export function GamePlate() {
+  const violet = "oklch(0.55 0.15 305)";
+  const sky = (p: number) => `color-mix(in oklch, var(--night), ${violet} ${p}%)`;
+  const blockFar = sky(26);
+  const blockNear = "color-mix(in oklch, var(--night), black 30%)";
+
+  // near panel blocks: [x, width, floors]
+  const near: [number, number, number][] = [
+    [560, 150, 9],
+    [930, 120, 7],
+    [1060, 190, 11],
+  ];
+  const far: [number, number][] = [
+    [520, 120],
+    [640, 80],
+    [720, 140],
+    [870, 90],
+    [980, 110],
+    [1100, 120],
+  ];
+  const horizon = 400;
+  const vx = 860; // vanishing point of the avenue
+
+  return (
+    <svg viewBox="0 0 1200 520" preserveAspectRatio="xMaxYMax slice" className={svgBase} aria-hidden="true">
+      <defs>
+        <linearGradient id="gp-sky" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" style={{ stopColor: sky(6) }} />
+          <stop offset="0.55" style={{ stopColor: sky(30) }} />
+          <stop offset="0.71" style={{ stopColor: `color-mix(in oklch, ${sky(40)}, var(--copper) 18%)` }} />
+          <stop offset="1" style={{ stopColor: sky(10) }} />
+        </linearGradient>
+        <radialGradient id="gp-corona" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0.3" style={{ stopColor: "var(--copper)", stopOpacity: 0.55 }} />
+          <stop offset="0.55" style={{ stopColor: `color-mix(in oklch, var(--copper), ${violet} 50%)`, stopOpacity: 0.22 }} />
+          <stop offset="1" style={{ stopColor: violet, stopOpacity: 0 }} />
+        </radialGradient>
+        <linearGradient id="gp-road" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" style={{ stopColor: sky(22) }} />
+          <stop offset="1" style={{ stopColor: "color-mix(in oklch, var(--night), black 20%)" }} />
+        </linearGradient>
+        <filter id="gp-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
+      </defs>
+
+      <rect width="1200" height="520" fill="url(#gp-sky)" />
+
+      {/* the swallowed sun */}
+      <g className={`${t} duration-700 origin-[900px_190px] group-hover:scale-[1.06] group-focus-within:scale-[1.06]`}>
+        <circle cx="900" cy="190" r="170" fill="url(#gp-corona)" />
+        <circle
+          cx="900"
+          cy="190"
+          r="62"
+          fill="none"
+          strokeWidth="10"
+          filter="url(#gp-glow)"
+          className={`stroke-copper opacity-70 ${t} group-hover:opacity-100 group-focus-within:opacity-100`}
+        />
+        <circle cx="900" cy="190" r="62" fill="none" strokeWidth="2.5" style={{ stroke: "color-mix(in oklch, var(--copper), var(--paper) 45%)" }} />
+        <circle cx="900" cy="190" r="60.5" style={{ fill: "color-mix(in oklch, var(--night), black 45%)" }} />
+      </g>
+
+      {/* far blocks in the haze */}
+      {far.map(([x, w], i) => (
+        <rect key={i} x={x} y={horizon - 50 - (i % 3) * 18} width={w} height={54 + (i % 3) * 18} style={{ fill: blockFar }} />
+      ))}
+
+      {/* near panel blocks with a few lit windows */}
+      {near.map(([x, w, floors], b) => {
+        const fh = 20;
+        const top = horizon - floors * fh;
+        const cols = Math.floor((w - 14) / 20);
+        return (
+          <g key={b}>
+            <rect x={x} y={top} width={w} height={floors * fh + 4} style={{ fill: blockNear }} />
+            {Array.from({ length: floors * cols }).map((_, k) => {
+              const r = Math.floor(k / cols);
+              const c = k % cols;
+              const lit = (r * 7 + c * 13 + b * 5) % 9 === 0;
+              const dim = (r * 3 + c * 5 + b) % 4 === 0;
+              if (!lit && !dim) return null;
+              return (
+                <rect
+                  key={k}
+                  x={x + 10 + c * 20}
+                  y={top + 7 + r * fh}
+                  width="7"
+                  height="7"
+                  style={{ fill: lit ? "color-mix(in oklch, var(--copper), var(--paper) 62%)" : "var(--paper)" }}
+                  opacity={lit ? 0.85 : 0.06}
+                />
+              );
+            })}
+          </g>
+        );
+      })}
+
+      {/* ground and the empty avenue */}
+      <rect y={horizon} width="1200" height={520 - horizon} style={{ fill: "color-mix(in oklch, var(--night), black 25%)" }} />
+      <path d={`M${vx - 6} ${horizon} L${vx + 6} ${horizon} L1260 520 L470 520 Z`} fill="url(#gp-road)" />
+      {[0.08, 0.2, 0.38, 0.62].map((p, i) => {
+        const y1 = horizon + (520 - horizon) * p;
+        const y2 = y1 + 5 + 30 * p;
+        const x = (y: number) => vx + ((y - horizon) / (520 - horizon)) * -5;
+        return (
+          <path
+            key={i}
+            d={`M${x(y1)} ${y1} L${x(y2)} ${y2}`}
+            strokeWidth={1 + 5 * p}
+            strokeLinecap="round"
+            className="stroke-paper/45"
+          />
+        );
+      })}
+
+      {/* a street lamp */}
+      <path d="M1010 520 V350 h-26" fill="none" strokeWidth="3" style={{ stroke: blockNear }} />
+      <circle cx="982" cy="354" r="18" className="fill-paper/10" filter="url(#gp-glow)" />
+      <circle cx="982" cy="354" r="3" className="fill-paper/80" />
+
+      {/* the walker, hood up, tamga hand at the side */}
+      <g transform="translate(838 436) scale(0.85)" style={{ fill: "color-mix(in oklch, var(--night), black 55%)" }}>
+        <path d="M14 0c-8 0-12 7-12 14 0 4 2 7 3 9l-5 37 6 1 4-22 3 22h7l3-22 4 22 6-1-5-37c1-2 3-5 3-9 0-7-5-14-12-14z" />
+        <circle cx="31" cy="38" r="3" className="fill-copper" />
+      </g>
+    </svg>
+  );
+}
