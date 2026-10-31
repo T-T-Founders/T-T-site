@@ -104,6 +104,17 @@ Still forbidden: parallax, scroll hijacking, marquees, particles, hover scale
 on whole cards, loading screens. `prefers-reduced-motion: reduce` shows
 everything in place: static discs, no reveals, no page transitions.
 
+## Surface and grain
+
+- Planet relief: `public/images/hero/planet-surface.webp`, rendered by
+  `scripts/planet-surface.py` (procedural heightmap lit by a low copper light).
+  One image, no tiling, covering only the cap of the planet visible in the hero;
+  everything outside the rim band is flattened so the file stays ~150 KB. CSS
+  darkens it toward the planet's interior, so the relief reads only near the lit
+  rim, as in the hero reference.
+- Film grain over the whole site at ~12%: one fixed `body::after` layer with dark
+  and light specks in equal measure, no blend mode (cheap to scroll on phones).
+
 ## Signature
 
 Name: The eclipse horizon.
@@ -251,8 +262,9 @@ MOTION jobs:   disc crossing -> overlap area dims the horizon (it is an eclipse)
 VERDICT: ship
 ```
 
-Changes made because of the audit: removed the planet surface texture (tile
-seams, and it competed with the signature), removed the decorative ring and
+Changes made because of the audit: removed the tiled planet surface texture
+(tile seams, and it competed with the signature; later replaced by a single
+seamless relief, see below), removed the decorative ring and
 monitor drawings from the VeloBoost and MyPC pages (they only repeated the
 home-page cards), switched internal "Product page" arrows from ↗ to →, made the
 header solid as soon as the page scrolls.

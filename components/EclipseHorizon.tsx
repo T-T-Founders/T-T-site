@@ -146,7 +146,6 @@ export default function EclipseHorizon() {
       </div>
       <div className="planet-haze" />
       <div className="planet" />
-      <div className="grain absolute inset-0 opacity-[0.22] mix-blend-multiply" />
     </div>
   );
 }
