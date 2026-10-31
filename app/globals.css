@@ -49,6 +49,8 @@
 html {
   scroll-padding-top: var(--header-h);
   -webkit-text-size-adjust: 100%;
+  /* routes differ in height: keep the scrollbar slot so the layout never shifts sideways */
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -65,6 +67,9 @@ body {
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  /* nothing may push the page sideways on a phone */
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
@@ -114,7 +119,7 @@ body {
 }
 .link-line:hover,
 .link-line:focus-visible,
-.link-line[aria-current="true"] {
+.link-line[aria-current] {
   background-size: 100% 1px;
 }
 
@@ -228,6 +233,29 @@ body {
   }
 }
 
+/* hero headline: each line rises from behind a mask, CSS only (no JS wait) */
+.hero-lines > span {
+  display: block;
+  overflow: clip;
+  overflow-clip-margin: 0.2em;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.hero-lines > span > span {
+  display: block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-lines > span > span {
+    animation: line-up 1.15s var(--ease-out) both;
+    animation-delay: calc(0.2s + var(--l, 0) * 0.13s);
+  }
+}
+@keyframes line-up {
+  from {
+    transform: translate3d(0, 105%, 0);
+  }
+}
+
 @keyframes rise {
   from {
     transform: translateY(42%);
@@ -264,6 +292,140 @@ body {
   transition-timing-function: var(--ease-out);
 }
 
+/* ---------- Scroll reveal ----------
+ * Elements marked data-reveal start lowered and transparent, and rise once when
+ * they enter the viewport (components/RevealObserver.tsx). Only opacity and
+ * transform change, so nothing reflows and the page never jumps on a phone.
+ * The `js` class is set by an inline script before first paint and removed
+ * again if the observer never starts, so content is never lost without JS.
+ */
+.title-lines > span {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    transition:
+      opacity 0.9s var(--ease-out),
+      transform 0.9s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+  .js [data-reveal]:not([data-shown]) {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+  /* section titles rise line by line from behind a mask */
+  .js .title-lines > span {
+    overflow: clip;
+    overflow-clip-margin: 0.2em;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+  .js .title-lines > span > span {
+    display: block;
+    transition: transform 1.1s var(--ease-out);
+    transition-delay: calc(var(--l, 0) * 110ms);
+  }
+  .js .title-lines:not([data-shown]) > span > span {
+    transform: translate3d(0, 105%, 0);
+  }
+}
+
+/* ---------- Skeletons ---------- */
+
+.skeleton {
+  --sk-a: color-mix(in oklch, var(--line) 70%, var(--paper));
+  --sk-b: color-mix(in oklch, var(--line), white 35%);
+  background: linear-gradient(100deg, var(--sk-a) 35%, var(--sk-b) 50%, var(--sk-a) 65%) 0 0 / 300% 100%;
+  border-radius: var(--r-sm);
+}
+.skeleton-night,
+[data-theme="night"] .skeleton,
+.plate .skeleton {
+  --sk-a: color-mix(in oklch, var(--paper) 6%, var(--night));
+  --sk-b: color-mix(in oklch, var(--paper) 13%, var(--night));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton {
+    animation: shimmer 1.6s linear infinite;
+  }
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* Lazily mounted plates and images fade in over their skeleton. */
+.lazy-in {
+  animation: lazy-in 0.7s var(--ease-out) both;
+}
+@keyframes lazy-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Page transitions (React <ViewTransition>, components/PageTransition.tsx) ---------- */
+
+::view-transition-old(.page-out) {
+  animation: 180ms ease-in both page-fade reverse;
+}
+::view-transition-new(.page-in) {
+  animation:
+    320ms var(--ease-out) 120ms both page-fade,
+    520ms var(--ease-out) 120ms both page-rise;
+}
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes page-rise {
+  from {
+    transform: translateY(18px);
+  }
+}
+
+/* ---------- Cards: hover only where a pointer can hover ---------- */
+
+.card-art {
+  transition: transform 1.2s var(--ease-out);
+}
+.card-arrow,
+.nudge-x {
+  transition: transform 0.45s var(--ease-out);
+}
+@media (hover: hover) {
+  .group:hover .card-art {
+    transform: scale(1.045);
+  }
+  .group:hover .card-arrow {
+    transform: translate3d(3px, -3px, 0);
+  }
+  .group:hover .nudge-x {
+    transform: translate3d(5px, 0, 0);
+  }
+}
+.group:focus-within .card-arrow {
+  transform: translate3d(3px, -3px, 0);
+}
+.group:focus-within .nudge-x {
+  transform: translate3d(5px, 0, 0);
+}
+/* touch: a short press response instead of a hover state */
+@media (hover: none) {
+  .press {
+    transition: transform 0.25s var(--ease-out);
+  }
+  .press:active {
+    transform: scale(0.985);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -271,5 +433,10 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-property: color, background-color, border-color, opacity !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

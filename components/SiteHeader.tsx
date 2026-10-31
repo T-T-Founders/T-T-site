@@ -7,70 +7,76 @@ import { Mark, Wordmark } from "./Logo";
 import { orgGithub } from "@/lib/projects";
 
 const NAV = [
-  { id: "skills", label: "Skills" },
-  { id: "applications", label: "Applications" },
-  { id: "games", label: "Games" },
-  { id: "about", label: "About" },
+  { href: "/skills", label: "Skills" },
+  { href: "/applications", label: "Applications" },
+  { href: "/games", label: "Games" },
+  { href: "/#about", label: "About" },
 ];
 
+type Theme = "sky" | "paper" | "night";
+
+const themeFor = (path: string): Theme =>
+  path === "/" ? "sky" : path.startsWith("/games") ? "night" : "paper";
+
 /**
- * Sticky header. Two pieces of state, both describing the page underneath:
- * - which section is in view (aria-current on the matching link)
- * - whether the header sits over a night section (it flips to night colors)
+ * Sticky header. Its colors follow whatever section sits right under it
+ * (sky, paper or night), and the active link follows the route.
  */
 export default function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const startTheme = isHome ? "sky" : pathname.startsWith("/games") ? "night" : "paper";
-  const [active, setActive] = useState<string | null>(null);
-  const [theme, setTheme] = useState<"sky" | "paper" | "night">(startTheme);
+  // What was measured under the header, tagged with the route it was measured on,
+  // so a reading from the previous page can never color the new one.
+  const [measured, setMeasured] = useState<{ path: string; theme: Theme } | null>(null);
+  const theme: Theme = measured?.path === pathname ? measured.theme : themeFor(pathname);
+  const [aboutInView, setAboutInView] = useState(false);
   const [open, setOpen] = useState(false);
   const [atTop, setAtTop] = useState(true);
+  const [shownPath, setShownPath] = useState(pathname);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-theme]"));
-    if (!sections.length) return;
+  // New route: start from that page's color and close the menu (state adjusted during render).
+  if (shownPath !== pathname) {
+    setShownPath(pathname);
+    setOpen(false);
+  }
 
-    // Theme: whatever section sits at the header's bottom edge.
-    const hh = document.querySelector("header")?.getBoundingClientRect().height ?? 76;
-    const themeIO = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            setTheme((e.target as HTMLElement).dataset.theme as "sky" | "paper" | "night");
-          }
-        }
-      },
-      { rootMargin: `-${Math.round(hh)}px 0px -${Math.max(0, window.innerHeight - Math.round(hh) - 2)}px 0px`, threshold: 0 },
-    );
-    // Active link: the section crossing the middle of the viewport.
-    const spyIO = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) setActive((e.target as HTMLElement).dataset.nav ?? null);
-        }
-      },
-      { rootMargin: "-45% 0px -54% 0px", threshold: 0 },
-    );
-    sections.forEach((s) => {
-      themeIO.observe(s);
-      spyIO.observe(s);
-    });
+  // Theme + "at top" from what is under the header's bottom edge. One rAF per scroll.
+  useEffect(() => {
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      setAtTop(window.scrollY < 8);
+      const header = document.querySelector("header");
+      const y = Math.round((header?.getBoundingClientRect().height ?? 76) + 2);
+      const el = document.elementFromPoint(Math.round(window.innerWidth / 2), y);
+      const t = el?.closest<HTMLElement>("[data-theme]")?.dataset.theme as Theme | undefined;
+      // the sky only exists on the home page; anything else is a stale hit mid-transition
+      if (t && (t !== "sky" || pathname === "/")) setMeasured({ path: pathname, theme: t });
+      const about = document.getElementById("about");
+      if (about) {
+        const r = about.getBoundingClientRect();
+        const mid = window.innerHeight / 2;
+        setAboutInView(r.top < mid && r.bottom > mid);
+      } else setAboutInView(false);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    // let the new page paint first (and again once the page transition has settled), then read it
+    const first = window.setTimeout(measure, 60);
+    const settled = window.setTimeout(measure, 700);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
-      themeIO.disconnect();
-      spyIO.disconnect();
+      window.clearTimeout(first);
+      window.clearTimeout(settled);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, [pathname]);
-
-  // The header is transparent only while the hero sky is fully behind it.
-  useEffect(() => {
-    const onScroll = () => setAtTop(window.scrollY < 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Close the mobile menu on Escape and on outside click.
   useEffect(() => {
@@ -94,6 +100,9 @@ export default function SiteHeader() {
     };
   }, [open]);
 
+  const isActive = (href: string) =>
+    href === "/#about" ? isHome && aboutInView : pathname === href || pathname.startsWith(`${href}/`);
+
   const night = theme === "night";
   const bar =
     theme === "sky" && atTop && !open
@@ -114,8 +123,8 @@ export default function SiteHeader() {
       >
         Skip to content
       </a>
-      <div className="mx-auto flex h-full max-w-[1600px] items-center justify-between gap-6 px-[var(--gutter)]">
-        <Link href="/" className="flex items-center gap-3 rounded-sm" aria-label="T&T Labs, home">
+      <div className="mx-auto grid h-full max-w-[1600px] grid-cols-[1fr_auto] items-center gap-6 px-[var(--gutter)] md:grid-cols-[1fr_auto_1fr]">
+        <Link href="/" className="flex items-center gap-3 justify-self-start rounded-sm" aria-label="T&T Labs, home">
           <Mark id="hdr" className="h-[30px] w-auto sm:h-[36px]" />
           <Wordmark className="text-[1.6rem] sm:text-[1.95rem]" />
         </Link>
@@ -123,11 +132,11 @@ export default function SiteHeader() {
         <nav aria-label="Primary" className="hidden md:block">
           <ul className="flex items-center gap-10 text-[0.98rem]">
             {NAV.map((n) => (
-              <li key={n.id}>
+              <li key={n.href}>
                 <Link
-                  href={`/#${n.id}`}
+                  href={n.href}
                   className="link-line py-1"
-                  aria-current={isHome && active === n.id ? "true" : undefined}
+                  aria-current={isActive(n.href) ? (n.href.startsWith("/#") ? "true" : "page") : undefined}
                 >
                   {n.label}
                 </Link>
@@ -136,17 +145,17 @@ export default function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-self-end">
           <a
             href={orgGithub}
-            className={`hidden h-11 items-center gap-2 rounded-pill border px-5 text-[0.95rem] transition-colors duration-200 md:inline-flex ${
+            className={`group hidden h-11 items-center gap-2 rounded-pill border px-5 text-[0.95rem] transition-colors duration-200 md:inline-flex ${
               night
                 ? "border-paper/50 hover:bg-paper hover:text-night"
                 : "border-ink/60 hover:bg-ink hover:text-paper"
             }`}
           >
             GitHub
-            <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden="true">
+            <svg viewBox="0 0 16 16" className="card-arrow h-3.5 w-3.5" aria-hidden="true">
               <path d="M4 12 12 4M5.5 4H12v6.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
             </svg>
           </a>
@@ -166,21 +175,31 @@ export default function SiteHeader() {
         </div>
       </div>
 
+      {/* Overlays the page instead of pushing it down, so opening it never moves the content. */}
       <div
         id="mobile-menu"
         ref={menuRef}
-        hidden={!open}
-        className={`border-b px-[var(--gutter)] pb-6 pt-2 md:hidden ${
-          night ? "border-night-line bg-night text-paper" : "border-line bg-paper text-ink"
-        }`}
+        inert={!open}
+        className={`absolute inset-x-0 top-full border-b px-[var(--gutter)] pb-6 pt-2 transition-[opacity,transform,visibility] duration-300 ease md:hidden ${
+          open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0"
+        } ${night ? "border-night-line bg-night text-paper" : "border-line bg-paper text-ink"}`}
       >
         <nav aria-label="Mobile">
           <ul className="flex flex-col">
-            {NAV.map((n) => (
-              <li key={n.id}>
+            {NAV.map((n, i) => (
+              <li
+                key={n.href}
+                className="transition-[opacity,transform] duration-500 ease"
+                style={{
+                  transitionDelay: open ? `${60 + i * 45}ms` : "0ms",
+                  opacity: open ? 1 : 0,
+                  transform: open ? "none" : "translateY(8px)",
+                }}
+              >
                 <Link
-                  href={`/#${n.id}`}
+                  href={n.href}
                   className="flex min-h-12 items-center font-display text-[1.75rem] leading-none"
+                  aria-current={isActive(n.href) ? "page" : undefined}
                   onClick={() => setOpen(false)}
                 >
                   {n.label}

@@ -62,7 +62,10 @@ editorial for the company story, regular for the project directory.
 - "The client explicitly requested an Anthropic-inspired visual direction."
 - "Every visible sentence must communicate a real fact, explain a project, or
   enable an action." No invented features, numbers, customers or team members.
-- Order: Hero, Philosophy, Skills, Applications, Games, Footer.
+- Screens: Home (hero + philosophy + division cards), then Skills, Applications
+  and Games, each a separate page.
+- Minimal copy: no text that carries no information (eyebrows, genre/engine
+  tags, native-name subtitles, decorative captions).
 - Skills link straight to GitHub. Applications and Games never link to GitHub
   from the card; they open a real product site or an internal product page.
 - English only. No Careers / Research / Press / Investors.

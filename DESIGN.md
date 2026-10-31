@@ -81,24 +81,28 @@ desktop); regular for the project directory (card gutters 20px).
 
 ## Motion philosophy
 
-Motion describes light and position, never decoration: the discs rise and
-cross; everything else only acknowledges input.
+Revised on the client's request: the site should feel more animated, on phones
+too, without the page ever jumping. Every animation moves only `opacity` and
+`transform`, so nothing reflows.
 
-Allowed:
 - Signature: discs rise over the horizon once on load, then cross slowly
   (one 22 s cycle). The overlap area drives the horizon light (eclipse dims it).
-- One load sequence: header, then headline, then sentence + button (opacity +
-  12px), finished in under 1.2 s.
-- Hover/focus: link underline grows, card border darkens, the illustration on a
-  project plate responds in a way that explains the product (the search
-  highlight in TKRS moves, the TK3D mesh turns).
-- Header state change (paper ↔ night) when scrolling into the Games section,
-  because the page background changes underneath it.
+- Hero headline lines rise from behind a mask on load (CSS only, no JS wait).
+- Section headings rise line by line, and cards rise in a short stagger, when
+  they scroll into view (`data-reveal`, `components/RevealObserver.tsx`).
+- Route changes cross-fade through React `<ViewTransition>` (`PageTransition`).
+- Hover (pointer devices only): border darkens, art zooms inside its frame,
+  arrows nudge, plate drawings show what the product does. Touch: a light
+  press response instead, so no hover state sticks on a phone.
+- Mobile menu overlays the page (it never pushes content down) and its links
+  stagger in.
+- Lazy loading: project drawings mount when near the viewport (`LazyMount`),
+  images are lazy `next/image` over a shimmer (`FadeImage`); each route has a
+  `loading.tsx` skeleton with the same grid as the page.
 
-Forbidden: fade-up on scroll for every section, hover scale on cards, animated
-arrows, marquees, parallax, scroll hijacking, loading screens, particles.
-`prefers-reduced-motion: reduce` renders the discs in their final position with
-no loop, and removes all transitions except color.
+Still forbidden: parallax, scroll hijacking, marquees, particles, hover scale
+on whole cards, loading screens. `prefers-reduced-motion: reduce` shows
+everything in place: static discs, no reveals, no page transitions.
 
 ## Signature
 
@@ -116,34 +120,22 @@ headings. No other section contains a planet, orb or glow.
 
 ## Layout concept
 
-One continuous page in the reference order, with a sticky header whose active
-link tracks the section in view.
+Four screens, as in the references. Home is the hero plus the team's
+philosophy; each division has its own route.
 
 ```
-+----------------------------------------------------------------+
-| (o0) T&T Labs      Skills  Applications  Games  About     (↗)  |
-|                                                    (  )(  )    |
-| T&T Labs                                          discs         |
-| Developer tools, software and games...       _____-----^^^^^   |
-| [View projects →]                      ___---    planet         |
-+----------------------------------------------------------------+
-| We started            |  paragraph (3 sentences)               |
-| in college.           |                                        |
-| ----------------------                                         |
-| [ dark band: Skills 4 · Applications 3 · Games 1 directory ]   |
-+----------------------------------------------------------------+
-| Skills for AI agents.                       one-line context   |
-| [plate][plate][plate][plate]  (4 repos → GitHub)               |
-+----------------------------------------------------------------+
-| Applications ...                            one-line context   |
-| [ IZDAR large dark plate     ] [ VeloBoost ]                   |
-| [                            ] [ MyPC      ]                   |
-+---------------------------- night -----------------------------+
-| Games heading                                                  |
-| [ wide game plate with game art → internal page ]              |
-| footer: mark, nav, GitHub, ©                                   |
-+----------------------------------------------------------------+
+/              hero: "We build tools, apps and games." + one button, the eclipse
+               philosophy: "We started in college." + two sentences
+               three clean cards: Skills, Applications, Games -> their pages
+/skills        "Skills for AI agents."  four plates -> GitHub
+/applications  "Software for Windows and industry."  IZDAR lead + two plates
+/games         night. "One game, in development."  one wide plate -> game page
 ```
+
+Copy rule (client): one heading, one sentence, a clean card, a click. No
+eyebrows (`01 / SKILLS`, "INDUSTRIAL SOFTWARE", "Dark fantasy · Godot"), no
+native-name subtitles, no side captions that repeat the heading, no footer
+captions under banners.
 
 ## Content model
 
