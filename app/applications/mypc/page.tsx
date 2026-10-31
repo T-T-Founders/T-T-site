@@ -3,6 +3,7 @@ import ProductPage from "@/components/ProductPage";
 import { githubUrl } from "@/lib/projects";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/applications/mypc" },
   title: "MyPC",
   description:
     "MyPC is a Telegram bot that tells you when your Windows PC turns on and can lock it remotely.",

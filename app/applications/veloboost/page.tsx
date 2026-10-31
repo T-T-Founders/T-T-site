@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ProductPage from "@/components/ProductPage";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/applications/veloboost" },
   title: "VeloBoost",
   description:
     "VeloBoost is a Windows utility that applies reversible system tweaks while a chosen game runs, then rolls them back.",

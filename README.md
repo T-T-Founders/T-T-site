@@ -38,8 +38,14 @@ npm run dev
 ## Deploy (Cloudflare Workers)
 
 The site is a static export (`output: "export"`, built into `out/`) served as
-Worker static assets. `wrangler.jsonc` defines the Worker `tt-labs-site`; there is
-no server code. Unknown paths get `out/404.html` with a 404 status.
+Worker static assets by the Worker `tt-labs-site` (`wrangler.jsonc`). There is no
+server code. Unknown paths get `out/404.html` with a 404 status.
+`public/_headers` sets the security headers (CSP, HSTS, frame denial, etc.) and
+caching (`/_next/static/*` immutable for a year, HTML always revalidated).
+
+`NEXT_PUBLIC_SITE_URL` is the public origin. It feeds canonical links, the
+sitemap, `robots.txt` and social preview URLs; `npm run deploy` refuses to run
+without an https value.
 
 Preview on the Workers runtime locally:
 
@@ -47,15 +53,43 @@ Preview on the Workers runtime locally:
 npm run preview
 ```
 
-Deploy (needs `CLOUDFLARE_API_TOKEN` with the *Edit Cloudflare Workers* template,
-and `CLOUDFLARE_ACCOUNT_ID`):
+### Automatic deploys (recommended)
+
+`.github/workflows/deploy.yml` deploys every push to `main`. In the GitHub repo,
+Settings > Secrets and variables > Actions, add:
+
+| Kind | Name | Value |
+|---|---|---|
+| Secret | `CLOUDFLARE_API_TOKEN` | API token from the *Edit Cloudflare Workers* template |
+| Secret | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
+| Variable | `SITE_URL` | e.g. `https://tt-labs-site.<subdomain>.workers.dev` |
+
+Until all three exist the workflow skips the deploy with a warning instead of failing.
+
+### Manual deploy
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://tt-labs-site.<your-subdomain>.workers.dev npm run deploy
+npx wrangler login
 ```
 
-`NEXT_PUBLIC_SITE_URL` makes Open Graph image URLs absolute. Use the custom
-domain instead once one is attached.
+```bash
+NEXT_PUBLIC_SITE_URL=https://tt-labs-site.<subdomain>.workers.dev npm run deploy
+```
+
+### Custom domain
+
+When the domain's zone is on the same Cloudflare account: add the `routes` entry
+shown in `wrangler.jsonc`, change `SITE_URL` to the domain, and redeploy.
+
+### Brand images
+
+`app/opengraph-image.png` and `app/apple-icon.png` are rendered from
+`scripts/brand-images.mjs` with the site's typeface. Re-run after changing the
+mark or tagline (needs Playwright with Chromium):
+
+```bash
+npm run brand-images
+```
 
 ## Images
 

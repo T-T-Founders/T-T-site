@@ -3,9 +3,15 @@
   "name": "tt-labs-site",
   "compatibility_date": "2026-10-01",
   // Static-only Worker: no script, Cloudflare serves the Next.js export directly.
+  // Response headers (security, caching) live in public/_headers.
   "assets": {
     "directory": "./out",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
-  }
+  },
+  "workers_dev": true
+
+  // Custom domain: once the zone is on this Cloudflare account, add
+  //   "routes": [{ "pattern": "example.com", "custom_domain": true }]
+  // set the site URL to https://example.com, and redeploy.
 }

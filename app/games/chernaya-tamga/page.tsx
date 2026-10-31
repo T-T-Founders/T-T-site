@@ -6,10 +6,18 @@ import courtyard from "@/public/images/games/tamga-courtyard.jpg";
 import fire from "@/public/images/games/tamga-fire.jpg";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/games/chernaya-tamga" },
   title: "Chernaya Tamga",
   description:
     "Chernaya Tamga is a third-person dark fantasy game in development, set in Aktobe after the sun has been swallowed.",
-  openGraph: { images: [{ url: avenue.src, width: avenue.width, height: avenue.height }] },
+  openGraph: {
+    type: "website",
+    siteName: "T&T Labs",
+    url: "/games/chernaya-tamga",
+    title: "Chernaya Tamga",
+    description: "A third-person dark fantasy game in development, set in a sunless Aktobe.",
+    images: [{ url: avenue.src, width: avenue.width, height: avenue.height }],
+  },
 };
 
 const shots = [
