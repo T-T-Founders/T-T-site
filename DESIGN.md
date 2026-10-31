@@ -107,9 +107,9 @@ everything in place: static discs, no reveals, no page transitions.
 ## Surface and grain
 
 - Planet relief: `public/images/hero/planet-surface.webp`, rendered by
-  `scripts/planet-surface.py` (procedural heightmap lit by a low copper light).
+  `scripts/planet-surface.py` (rocky heightmap with craters, lit by a low copper light).
   One image, no tiling, covering only the cap of the planet visible in the hero;
-  everything outside the rim band is flattened so the file stays ~150 KB. CSS
+  everything outside the rim band is flattened so the file stays ~70 KB. CSS
   darkens it toward the planet's interior, so the relief reads only near the lit
   rim, as in the hero reference.
 - Film grain over the whole site at ~12%: one fixed `body::after` layer with dark
