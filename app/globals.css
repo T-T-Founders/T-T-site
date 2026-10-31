@@ -242,27 +242,6 @@ body::after {
   }
 }
 
-.discs {
-  position: absolute;
-  width: var(--discs-w);
-  left: var(--discs-x);
-  top: var(--discs-y);
-  aspect-ratio: 2 / 1;
-}
-
-/* ---------- Entry sequence (one, on load) ---------- */
-
-@media (prefers-reduced-motion: no-preference) {
-  .rise {
-    animation: rise 2.2s var(--ease-out) both;
-    animation-delay: 0.15s;
-  }
-  .enter {
-    animation: enter 0.9s var(--ease-out) both;
-    animation-delay: calc(0.25s + var(--i, 0) * 0.12s);
-  }
-}
-
 /* hero headline: each line rises from behind a mask, CSS only (no JS wait) */
 .hero-lines > span {
   display: block;
@@ -286,23 +265,323 @@ body::after {
   }
 }
 
-@keyframes rise {
-  from {
-    transform: translateY(42%);
+/* ---------- Home story (components/Hero.tsx) ----------
+ * Default = three ordinary blocks with static discs (no JS, or reduced motion).
+ * Pinned = a 300svh track with a sticky full-screen stage; everything reads
+ * the scroll progress --p (0..1) that Hero.tsx writes on the section.
+ * The disc box (--box-*) sits just above the planet's horizon at each size.
+ */
+.story {
+  --box-l: 6vw;
+  --box-w: 88vw;
+  --box-t: calc(100% - 66vw);
+}
+@media (max-width: 639px) {
+  /* phones: sink the planet a little so the copy and mockups have room */
+  .story .hero-scene {
+    --planet-y: calc(100% - 46vw);
   }
-  to {
-    transform: translateY(0);
+}
+@media (min-width: 640px) {
+  .story {
+    --box-l: 10vw;
+    --box-w: 80vw;
+    --box-t: calc(100% - 53.5vw);
+  }
+}
+@media (min-width: 1024px) {
+  .story {
+    --box-l: 38vw;
+    --box-w: 58vw;
+    --box-t: calc(100% - 46vw);
   }
 }
 
-@keyframes enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
+.story-stage {
+  position: relative;
+}
+.story-art {
+  display: none;
+}
+.story-screen {
+  position: relative;
+  display: grid;
+  align-items: center;
+  gap: 2.5rem;
+  padding-block: 4.5rem;
+}
+.story-art + .story-screen {
+  padding-top: calc(var(--header-h) + 3.5rem);
+}
+.story-inner {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.story-static {
+  display: block;
+  width: min(calc(100% - 2 * var(--gutter)), 520px);
+  margin-inline: auto;
+  overflow: visible;
+}
+@media (min-width: 1024px) {
+  .story-screen {
+    grid-template-columns: 1fr 1fr;
+    max-width: 1600px;
+    margin-inline: auto;
   }
-  to {
-    opacity: 1;
-    transform: none;
+}
+
+.story-copy {
+  max-width: 40rem;
+}
+@media (min-width: 1024px) {
+  .story-copy {
+    max-width: min(36rem, 40vw);
+  }
+}
+.story-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-size: clamp(2.3rem, 1.2rem + 4.2vw, 5.4rem);
+  max-width: 12ch;
+  text-wrap: balance;
+}
+.story-name {
+  font-size: clamp(3.2rem, 1.4rem + 6vw, 7.5rem);
+}
+.story-caption {
+  margin-top: 1.25rem;
+  max-width: 32ch;
+  font-size: clamp(1.02rem, 0.95rem + 0.35vw, 1.3rem);
+  line-height: 1.55;
+  color: color-mix(in oklch, var(--ink) 86%, transparent);
+}
+.story-place {
+  margin-top: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: color-mix(in oklch, var(--raised) 75%, transparent);
+  font-size: 0.9rem;
+}
+.story-place-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--copper);
+}
+
+/* chat mockups (neutral UI, no product logos) */
+.story-mocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  max-width: 22rem;
+}
+/* short phones: the two windows sit side by side so they clear the discs */
+@media (max-width: 1023px) and (max-height: 740px) {
+  .story-mocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: none;
+  }
+  .story-mocks .mock-line {
+    max-width: 100%;
+  }
+}
+.mock {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--raised);
+  color: var(--ink);
+}
+.mock-avatar {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+}
+.mock-avatar-grey {
+  background: radial-gradient(
+    circle at 70% 30%,
+    color-mix(in oklch, var(--paper), white 30%),
+    color-mix(in oklch, var(--mute), var(--ink) 40%)
+  );
+}
+.mock-avatar-copper {
+  background: radial-gradient(
+    circle at 70% 60%,
+    color-mix(in oklch, var(--copper), white 25%),
+    color-mix(in oklch, var(--copper), black 35%)
+  );
+}
+.mock-line {
+  max-width: 85%;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.mock-user {
+  align-self: flex-end;
+}
+.mock-bot {
+  align-self: flex-start;
+}
+.mock-gem .mock-user {
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+  background: color-mix(in oklch, var(--line) 65%, var(--raised));
+}
+.mock-chat-tg {
+  background: color-mix(in oklch, var(--paper), var(--copper) 7%);
+}
+.mock-bubble {
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.9rem;
+}
+.mock-telegram .mock-user {
+  background: color-mix(in oklch, var(--copper) 22%, var(--raised));
+  border-bottom-right-radius: 0.25rem;
+}
+.mock-telegram .mock-bot {
+  background: var(--raised);
+  border-bottom-left-radius: 0.25rem;
+}
+
+/* tool and project chips: text only */
+.story-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 1.75rem;
+  padding-inline: 0.45rem;
+  border: 1px solid color-mix(in oklch, var(--ink) 18%, transparent);
+  border-radius: var(--r-pill);
+  background: color-mix(in oklch, var(--paper) 86%, transparent);
+  color: var(--ink);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+.story-chip-project {
+  border-color: transparent;
+  background: var(--ink);
+  color: var(--paper);
+}
+@media (min-width: 1024px) {
+  .story-chip {
+    height: 2.1rem;
+    padding-inline: 0.9rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .story {
+    height: 300svh;
+  }
+  .js .story-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+  .js .story-art {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .js .story-screen {
+    position: absolute;
+    inset: 0;
+    display: block;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }
+  .js .story[data-step="final"] .story-final {
+    pointer-events: auto;
+  }
+  .js .story-static {
+    display: none;
+  }
+  .js .story-inner {
+    padding-top: calc(var(--header-h) + 3svh);
+  }
+
+  /* one fade window per element: in over [--a, --b], out over [--c, --d] */
+  .js .story [data-win] {
+    --vis: min(
+      clamp(0, (var(--p) - var(--a)) / (var(--b) - var(--a)), 1),
+      clamp(0, (var(--d) - var(--p)) / (var(--d) - var(--c)), 1)
+    );
+    opacity: var(--vis);
+    transform: translate3d(0, calc((1 - var(--vis)) * var(--shift, 28px)), 0);
+    will-change: opacity, transform;
+  }
+
+  .js .story-discs {
+    position: absolute;
+    left: var(--box-l);
+    top: var(--box-t);
+    width: var(--box-w);
+    height: auto;
+    aspect-ratio: 3 / 1;
+    overflow: visible;
+  }
+
+  /* chips: two rows above the discs on phones and tablets */
+  .js .story-chips {
+    --shift: 10px;
+    --t: clamp(0, (var(--p) - var(--a)) / (var(--b) - var(--a)), 1);
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: calc(100% - var(--box-t) + 0.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem 0.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    .js .story-inner {
+      padding-top: calc(var(--header-h) + 17svh);
+    }
+
+    /* chips fly out from the eclipse onto an ellipse around it */
+    .js .story-chips {
+      --shift: 0px;
+      inset: 0;
+    }
+    .js .story-chip {
+      position: absolute;
+      left: calc(var(--box-l) + var(--box-w) / 2);
+      top: calc(var(--box-t) + var(--box-w) / 6);
+      transform: translate(-50%, -50%) translate(calc(var(--x) * var(--t)), calc(var(--y) * var(--t)))
+        scale(calc(0.7 + 0.3 * var(--t)));
+    }
+
+    /* each mockup sits under its disc */
+    .js .story-mock-slot {
+      position: absolute;
+      top: calc(var(--box-t) + var(--box-w) * 0.3 + 1.25rem);
+      width: 17rem;
+      margin-left: -8.5rem;
+    }
+    .js .story-mock-left {
+      left: calc(var(--box-l) + var(--box-w) * 0.2833);
+    }
+    .js .story-mock-right {
+      left: calc(var(--box-l) + var(--box-w) * 0.7167);
+    }
   }
 }
 

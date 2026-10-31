@@ -1,6 +1,6 @@
 # T&T Labs website
 
-The official site of T&T Labs: a home page with the team's philosophy, one page
+The official site of T&T Labs: a home page that tells the team's story, one page
 per division (Skills, Applications, Games) linking to all eight projects, and
 internal product pages for projects without their own website.
 
@@ -12,15 +12,15 @@ internal product pages for projects without their own website.
 
 Next.js 16 (App Router, fully static), TypeScript, Tailwind CSS 4. Fonts are
 self-hosted through `next/font` (EB Garamond, IBM Plex Sans, IBM Plex Mono).
-No animation library: the hero animation is ~100 lines in
-`components/EclipseHorizon.tsx` and pauses off-screen and under
-`prefers-reduced-motion`.
+No animation library: the home story is driven by one scroll-progress value in
+`components/Hero.tsx` (passive scroll listener + rAF) and CSS; it pauses
+off-screen and falls back to static blocks under `prefers-reduced-motion`.
 
 ## Routes
 
 | Route | Content |
 |---|---|
-| `/` | Hero, philosophy |
+| `/` | The story: two founders, two small bots, eight projects (copy in `lib/story.ts`) |
 | `/skills` | Four agent skills, each linking to its GitHub repository |
 | `/applications` | IZDAR Industrial, VeloBoost, MyPC |
 | `/games` | Chernaya Tamga |

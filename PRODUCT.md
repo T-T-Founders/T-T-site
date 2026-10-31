@@ -62,7 +62,7 @@ editorial for the company story, regular for the project directory.
 - "The client explicitly requested an Anthropic-inspired visual direction."
 - "Every visible sentence must communicate a real fact, explain a project, or
   enable an action." No invented features, numbers, customers or team members.
-- Screens: Home (hero + philosophy only), then Skills, Applications and Games,
+- Screens: Home (the founders' story in three scroll steps), then Skills, Applications and Games,
   each a separate page reached from the header. The home page never scrolls
   into the divisions.
 - Minimal copy: no text that carries no information (eyebrows, genre/engine

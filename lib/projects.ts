@@ -91,4 +91,7 @@ export const game = {
   href: "/games/chernaya-tamga",
 };
 
+/** Every game, as a list, so counts and indexes never special-case the single one. */
+export const games = [game];
+
 export const orgGithub = "https://github.com/T-T-Founders";

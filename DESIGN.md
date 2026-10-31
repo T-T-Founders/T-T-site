@@ -39,7 +39,7 @@ choices is anchored in the mark, not taken from the prior:
 | `--line` | `oklch(0.880 0.012 65)` / `#DDD5CB` | hairlines, card borders | paper darkened |
 | `--night` | `oklch(0.205 0.012 310)` / `#1D1A1F` | Games section, project plates | the dusk of the game reference |
 
-The mark's artwork (`components/Logo.tsx`, `EclipseHorizon.tsx`, `app/icon.svg`)
+The mark's artwork (`components/Logo.tsx`, `components/Hero.tsx`, `app/icon.svg`)
 keeps its own gradient stops: those are the logo, sampled from the supplied
 artwork, not UI colors. No component outside the mark uses a raw hex.
 
@@ -85,9 +85,12 @@ Revised on the client's request: the site should feel more animated, on phones
 too, without the page ever jumping. Every animation moves only `opacity` and
 `transform`, so nothing reflows.
 
-- Signature: discs rise over the horizon once on load, then cross slowly
-  (one 22 s cycle). The overlap area drives the horizon light (eclipse dims it).
-- Hero headline lines rise from behind a mask on load (CSS only, no JS wait).
+- Signature, the home story: the two discs are the two founders. Native scroll
+  through a pinned 300svh section sets one progress value `--p` (passive scroll
+  listener + rAF, no animation library); copy, mockups and chips fade on fixed
+  windows of `--p` in CSS, and the discs close from far apart into the eclipse
+  of the mark. Their overlap still drives the horizon light. Only opacity and
+  transform animate. Reduced motion or no JS: three plain blocks, static discs.
 - Section headings rise line by line, and cards rise in a short stagger, when
   they scroll into view (`data-reveal`, `components/RevealObserver.tsx`).
 - Route changes cross-fade through React `<ViewTransition>` (`PageTransition`).
@@ -100,9 +103,10 @@ too, without the page ever jumping. Every animation moves only `opacity` and
   images are lazy `next/image` over a shimmer (`FadeImage`); each route has a
   `loading.tsx` skeleton with the same grid as the page.
 
-Still forbidden: parallax, scroll hijacking, marquees, particles, hover scale
+Still forbidden: parallax, scroll hijacking (the story pins, it never takes over the wheel), marquees, particles, hover scale
 on whole cards, loading screens. `prefers-reduced-motion: reduce` shows
-everything in place: static discs, no reveals, no page transitions.
+everything in place: the story as three blocks with static discs, no reveals,
+no page transitions.
 
 ## Surface and grain
 
@@ -135,8 +139,11 @@ Four screens, as in the references. Home is the hero plus the team's
 philosophy; each division has its own route.
 
 ```
-/              hero: "We build tools, apps and games." + one button (-> /skills)
-               philosophy: "We started in college." + two sentences
+/              the story (one ~300svh pinned section, components/Hero.tsx):
+                 1 "Two friends from college."      discs far apart, drifting
+                 2 "It started with two small bots." discs closer, two chat mockups
+                 3 tool chips -> project chips, discs lock into the eclipse,
+                   h1 "T&T Labs" + "N projects later..." + View projects (-> /skills)
                nothing else: the divisions are reached from the header only
 /skills        "Skills for AI agents."  four plates -> GitHub
 /applications  "Software for Windows and industry."  IZDAR lead + two plates

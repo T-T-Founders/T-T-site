@@ -32,6 +32,9 @@ export default function SiteHeader() {
   const [aboutInView, setAboutInView] = useState(false);
   const [open, setOpen] = useState(false);
   const [atTop, setAtTop] = useState(true);
+  // The home story pins a full-screen sky stage; while it is pinned nothing scrolls
+  // under the header, so it can stay transparent the whole way through.
+  const [skyPinned, setSkyPinned] = useState(false);
   const [shownPath, setShownPath] = useState(pathname);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -48,6 +51,8 @@ export default function SiteHeader() {
     const measure = () => {
       raf = 0;
       setAtTop(window.scrollY < 8);
+      const stage = document.querySelector(".story-stage");
+      setSkyPinned(!!stage && getComputedStyle(stage).position === "sticky");
       const header = document.querySelector("header");
       const y = Math.round((header?.getBoundingClientRect().height ?? 76) + 2);
       const el = document.elementFromPoint(Math.round(window.innerWidth / 2), y);
@@ -105,7 +110,7 @@ export default function SiteHeader() {
 
   const night = theme === "night";
   const bar =
-    theme === "sky" && atTop && !open
+    theme === "sky" && (atTop || skyPinned) && !open
       ? "bg-transparent border-transparent"
       : night
         ? "bg-night border-night-line"
@@ -126,11 +131,11 @@ export default function SiteHeader() {
       <div className="mx-auto grid h-full max-w-[1600px] grid-cols-[1fr_auto] items-center gap-6 px-[var(--gutter)] md:grid-cols-[1fr_auto_1fr]">
         <Link href="/" className="flex items-center gap-3 justify-self-start rounded-sm" aria-label="T&T Labs, home">
           <Mark id="hdr" className="h-[30px] w-auto sm:h-[36px]" />
-          <Wordmark className="text-[1.6rem] sm:text-[1.95rem]" />
+          <Wordmark className="whitespace-nowrap text-[1.6rem] sm:text-[1.95rem]" />
         </Link>
 
         <nav aria-label="Primary" className="hidden md:block">
-          <ul className="flex items-center gap-10 text-[0.98rem]">
+          <ul className="flex items-center gap-6 text-[0.98rem] lg:gap-10">
             {NAV.map((n) => (
               <li key={n.href}>
                 <Link
