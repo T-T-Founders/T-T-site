@@ -35,12 +35,27 @@ npm install
 npm run dev
 ```
 
+## Deploy (Cloudflare Workers)
+
+The site is a static export (`output: "export"`, built into `out/`) served as
+Worker static assets. `wrangler.jsonc` defines the Worker `tt-labs-site`; there is
+no server code. Unknown paths get `out/404.html` with a 404 status.
+
+Preview on the Workers runtime locally:
+
 ```bash
-npm run build && npm start
+npm run preview
 ```
 
-Set `NEXT_PUBLIC_SITE_URL` (for example `https://example.com`) in production so
-Open Graph images resolve to absolute URLs.
+Deploy (needs `CLOUDFLARE_API_TOKEN` with the *Edit Cloudflare Workers* template,
+and `CLOUDFLARE_ACCOUNT_ID`):
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://tt-labs-site.<your-subdomain>.workers.dev npm run deploy
+```
+
+`NEXT_PUBLIC_SITE_URL` makes Open Graph image URLs absolute. Use the custom
+domain instead once one is attached.
 
 ## Images
 
