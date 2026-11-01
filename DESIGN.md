@@ -85,12 +85,12 @@ Revised on the client's request: the site should feel more animated, on phones
 too, without the page ever jumping. Every animation moves only `opacity` and
 `transform`, so nothing reflows.
 
-- Signature, the home story: the two discs are the two founders. Native scroll
-  through a pinned 300svh section sets one progress value `--p` (passive scroll
-  listener + rAF, no animation library); copy, mockups and chips fade on fixed
-  windows of `--p` in CSS, and the discs close from far apart into the eclipse
-  of the mark. Their overlap still drives the horizon light. Only opacity and
-  transform animate. Reduced motion or no JS: three plain blocks, static discs.
+- Signature: discs rise over the horizon once on load, then cross slowly
+  (one 22 s cycle). The overlap area drives the horizon light (eclipse dims it).
+  A dark hilltop (scripts/hero-ridge.py) rises into the foreground on load, so
+  the planet reads as the view from a summit.
+- The story under the hero is static: each screen only fades in once, like
+  every other section. No pinning, no scroll-driven animation.
 - Section headings rise line by line, and cards rise in a short stagger, when
   they scroll into view (`data-reveal`, `components/RevealObserver.tsx`).
 - Route changes cross-fade through React `<ViewTransition>` (`PageTransition`).
@@ -105,8 +105,7 @@ too, without the page ever jumping. Every animation moves only `opacity` and
 
 Still forbidden: parallax, scroll hijacking (the story pins, it never takes over the wheel), marquees, particles, hover scale
 on whole cards, loading screens. `prefers-reduced-motion: reduce` shows
-everything in place: the story as three blocks with static discs, no reveals,
-no page transitions.
+everything in place: static discs, no reveals, no page transitions.
 
 ## Surface and grain
 
@@ -116,8 +115,8 @@ no page transitions.
   everything outside the rim band is flattened so the file stays ~70 KB. CSS
   darkens it toward the planet's interior, so the relief reads only near the lit
   rim, as in the hero reference.
-- Film grain over the whole site at ~12%: one fixed `body::after` layer with dark
-  and light specks in equal measure, no blend mode (cheap to scroll on phones).
+- Film grain on pictures only (`.grain-on`: plates, illustrations, screenshots,
+  the hero scene), never on the page background, as in the reference.
 
 ## Signature
 
@@ -139,11 +138,12 @@ Four screens, as in the references. Home is the hero plus the team's
 philosophy; each division has its own route.
 
 ```
-/              the story (one ~300svh pinned section, components/Hero.tsx):
-                 1 "Two friends from college."      discs far apart, drifting
+/              hero: "We build tools, apps and games." + View projects (-> /skills),
+               the eclipse over the planet, a dark hilltop in the foreground
+               the story, three plain screens (components/Story.tsx):
+                 1 "Two friends from college."      discs far apart
                  2 "It started with two small bots." discs closer, two chat mockups
-                 3 tool chips -> project chips, discs lock into the eclipse,
-                   h1 "T&T Labs" + "N projects later..." + View projects (-> /skills)
+                 3 "T&T Labs", "N projects later..." the eclipse, tools and projects around it
                nothing else: the divisions are reached from the header only
 /skills        "Skills for AI agents."  four plates -> GitHub
 /applications  "Software for Windows and industry."  IZDAR lead + two plates

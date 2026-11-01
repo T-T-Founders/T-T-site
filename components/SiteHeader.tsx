@@ -32,9 +32,6 @@ export default function SiteHeader() {
   const [aboutInView, setAboutInView] = useState(false);
   const [open, setOpen] = useState(false);
   const [atTop, setAtTop] = useState(true);
-  // The home story pins a full-screen sky stage; while it is pinned nothing scrolls
-  // under the header, so it can stay transparent the whole way through.
-  const [skyPinned, setSkyPinned] = useState(false);
   const [shownPath, setShownPath] = useState(pathname);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -51,8 +48,6 @@ export default function SiteHeader() {
     const measure = () => {
       raf = 0;
       setAtTop(window.scrollY < 8);
-      const stage = document.querySelector(".story-stage");
-      setSkyPinned(!!stage && getComputedStyle(stage).position === "sticky");
       const header = document.querySelector("header");
       const y = Math.round((header?.getBoundingClientRect().height ?? 76) + 2);
       const el = document.elementFromPoint(Math.round(window.innerWidth / 2), y);
@@ -110,7 +105,7 @@ export default function SiteHeader() {
 
   const night = theme === "night";
   const bar =
-    theme === "sky" && (atTop || skyPinned) && !open
+    theme === "sky" && atTop && !open
       ? "bg-transparent border-transparent"
       : night
         ? "bg-night border-night-line"

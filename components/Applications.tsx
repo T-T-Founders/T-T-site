@@ -31,7 +31,7 @@ export default function Applications() {
           <article
             className={`group press plate relative isolate flex h-full min-h-[500px] flex-col overflow-hidden rounded-md p-8 text-paper sm:min-h-[480px] sm:p-10 ${focusRing}`}
           >
-            <div className="absolute inset-0 -z-10 opacity-90 max-sm:top-[38%] max-sm:opacity-70">
+            <div className="grain-on absolute inset-0 -z-10 opacity-90 max-sm:top-[38%] max-sm:opacity-70">
               <LazyMount>
                 <div className="card-art absolute inset-0">
                   <IzdarPlate />

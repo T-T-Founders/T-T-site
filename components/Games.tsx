@@ -12,7 +12,7 @@ export default function Games() {
 
         <div data-reveal className="mt-12 sm:mt-16">
           <article className="group press relative isolate overflow-hidden rounded-md has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-copper">
-            <div className="absolute inset-0 -z-20 max-md:bottom-[42%]">
+            <div className="grain-on absolute inset-0 -z-20 max-md:bottom-[42%]">
               <LazyMount>
                 <div className="card-art absolute inset-0">
                   <GamePlate />

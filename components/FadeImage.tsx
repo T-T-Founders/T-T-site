@@ -10,7 +10,7 @@ import { useState } from "react";
 export default function FadeImage({ alt, className = "", wrapperClassName = "", ...props }: ImageProps & { wrapperClassName?: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
-    <div className={`absolute inset-0 overflow-hidden ${wrapperClassName}`}>
+    <div className={`grain-on absolute inset-0 overflow-hidden ${wrapperClassName}`}>
       {loaded ? null : <div className="skeleton absolute inset-0 rounded-none" aria-hidden="true" />}
       <Image
         {...props}
