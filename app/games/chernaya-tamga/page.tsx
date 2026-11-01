@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import FadeImage from "@/components/FadeImage";
 import ProductPage from "@/components/ProductPage";
 import avenue from "@/public/images/games/tamga-avenue.jpg";
 import courtyard from "@/public/images/games/tamga-courtyard.jpg";
@@ -30,10 +30,8 @@ export default function ChernayaTamgaPage() {
   return (
     <ProductPage
       theme="night"
-      back={{ href: "/#games", label: "Games" }}
-      kind="Game in development"
+      back={{ href: "/games", label: "Games" }}
       name="Chernaya Tamga"
-      nativeName="Чёрная Тамга"
       lead={
         <p>
           A third-person dark fantasy set in Aktobe, Kazakhstan. The Black Khan has woken under the
@@ -51,25 +49,21 @@ export default function ChernayaTamgaPage() {
         <figure>
           <div className="grid gap-4 md:grid-cols-[1.6fr_1fr]">
             <div className="relative aspect-[1280/550] overflow-hidden rounded-md md:row-span-2 md:aspect-auto">
-              <Image
+              <FadeImage
                 src={shots[0].src}
                 alt={shots[0].alt}
                 fill
-                priority
-                placeholder="blur"
+                preload
                 sizes="(min-width: 768px) 60vw, 100vw"
                 className="object-cover"
               />
             </div>
             {shots.slice(1).map((s) => (
               <div key={s.src.src} className="relative aspect-[1280/430] overflow-hidden rounded-md">
-                <Image src={s.src} alt={s.alt} fill placeholder="blur" sizes="(min-width: 768px) 38vw, 100vw" className="object-cover" />
+                <FadeImage src={s.src} alt={s.alt} fill sizes="(min-width: 768px) 38vw, 100vw" className="object-cover" />
               </div>
             ))}
           </div>
-          <figcaption className="mt-4 text-[0.9rem] text-night-mute">
-            Screenshots from a development build, interface overlays cropped.
-          </figcaption>
         </figure>
       }
       blocks={[

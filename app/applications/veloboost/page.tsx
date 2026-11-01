@@ -12,8 +12,7 @@ export default function VeloBoostPage() {
   return (
     <ProductPage
       theme="paper"
-      back={{ href: "/#applications", label: "Applications" }}
-      kind="Windows utility"
+      back={{ href: "/applications", label: "Applications" }}
       name="VeloBoost"
       lead={
         <>

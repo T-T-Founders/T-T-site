@@ -15,8 +15,7 @@ export default function MyPcPage() {
   return (
     <ProductPage
       theme="paper"
-      back={{ href: "/#applications", label: "Applications" }}
-      kind="Windows + Telegram"
+      back={{ href: "/applications", label: "Applications" }}
       name="MyPC"
       lead={
         <>

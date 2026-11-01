@@ -49,6 +49,8 @@
 html {
   scroll-padding-top: var(--header-h);
   -webkit-text-size-adjust: 100%;
+  /* routes differ in height: keep the scrollbar slot so the layout never shifts sideways */
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -65,6 +67,9 @@ body {
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  /* nothing may push the page sideways on a phone */
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
@@ -75,6 +80,26 @@ body {
   outline: 2px solid var(--copper);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/*
+ * Film grain on pictures only (plates, illustrations, screenshots, the hero
+ * scene); the page background stays clean. Add .grain-on to the picture's box.
+ * Dark and light specks in equal measure, so colors keep their average.
+ */
+.grain-on {
+  isolation: isolate;
+}
+.grain-on::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.16;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' result='n'/><feColorMatrix in='n' result='d' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.2 0 0 0 -1.6'/><feColorMatrix in='n' result='l' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -3.2 0 0 0 1.6'/><feMerge><feMergeNode in='d'/><feMergeNode in='l'/></feMerge></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  background-size: 200px 200px;
 }
 
 /* Fine paper grain shared by the hero sky and the plates. Rendered once. */
@@ -114,7 +139,7 @@ body {
 }
 .link-line:hover,
 .link-line:focus-visible,
-.link-line[aria-current="true"] {
+.link-line[aria-current] {
   background-size: 100% 1px;
 }
 
@@ -126,126 +151,237 @@ body {
   border-radius: inherit;
 }
 
-/* ---------- Hero scene ---------- */
+/* ---------- Home picture (components/Hero.tsx) ---------- */
 
-.hero-sky {
-  background:
-    radial-gradient(
-      60% 55% at 86% 66%,
-      color-mix(in oklch, var(--copper) 34%, transparent),
-      transparent 70%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in oklch, var(--paper), var(--copper) 8%) 0%,
-      color-mix(in oklch, var(--paper), var(--copper) 16%) 55%,
-      color-mix(in oklch, var(--paper), var(--copper) 30%) 100%
-    );
-}
-
-.planet,
-.planet-haze {
+/* Shade behind the story on the dark hills: everything below the hero screen,
+   fading in from the sky above, darkest on the side where the text sits. */
+.story-shade {
   position: absolute;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  width: var(--planet-w);
-  left: var(--planet-x);
-  top: var(--planet-y);
-}
-
-.planet {
-  /* lit only at the rim: the light source sits behind the horizon */
-  background: radial-gradient(
-    circle closest-side,
-    color-mix(in oklch, var(--night), black 35%) 0%,
-    color-mix(in oklch, var(--night), black 30%) 93%,
-    color-mix(in oklch, var(--copper), var(--night) 68%) 97.6%,
-    color-mix(in oklch, var(--copper), black 8%) 99.4%,
-    color-mix(in oklch, var(--copper), white 35%) 100%
+  inset: 22% 0 0 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--night) 62%, transparent) 0%,
+    color-mix(in oklch, var(--night) 34%, transparent) 42%,
+    transparent 72%
   );
-  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 12%);
 }
-
-.planet-haze {
-  box-shadow:
-    0 0 0.6vw 0.1vw color-mix(in oklch, var(--copper), white 30%),
-    0 0 2.6vw 0.5vw color-mix(in oklch, var(--copper) 70%, transparent),
-    0 0 8vw 2vw color-mix(in oklch, var(--copper) 30%, transparent);
-  opacity: var(--light, 1);
-  will-change: opacity;
-}
-
-.hero-scene {
-  /* circle fitted to the horizon of the hero reference */
-  --planet-w: 320vw;
-  --planet-x: -51vw;
-  --planet-y: calc(100% - 28.8vw);
-  --discs-w: 40vw;
-  --discs-x: 58vw;
-  --discs-y: calc(100% - 47vw);
-}
-
 @media (max-width: 1023px) {
-  .hero-scene {
-    --planet-w: 320vw;
-    --planet-x: -51vw;
-    --planet-y: calc(100% - 40vw);
-    --discs-w: 56vw;
-    --discs-x: 40vw;
-    --discs-y: calc(100% - 65vw);
+  .story-shade {
+    inset: 21% 0 0 0;
+    background: color-mix(in oklch, var(--night) 44%, transparent);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 6%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 6%);
   }
 }
 
-@media (max-width: 639px) {
-  .hero-scene {
-    --planet-w: 320vw;
-    --planet-x: -60vw;
-    --planet-y: calc(100% - 50vw);
-    --discs-w: 72vw;
-    --discs-x: 22vw;
-    --discs-y: calc(100% - 82vw);
-  }
+/* hero headline: each line rises from behind a mask, CSS only (no JS wait) */
+.hero-lines > span {
+  display: block;
+  overflow: clip;
+  overflow-clip-margin: 0.2em;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
 }
-
-.discs {
-  position: absolute;
-  width: var(--discs-w);
-  left: var(--discs-x);
-  top: var(--discs-y);
-  aspect-ratio: 2 / 1;
+.hero-lines > span > span {
+  display: block;
 }
-
-/* ---------- Entry sequence (one, on load) ---------- */
-
 @media (prefers-reduced-motion: no-preference) {
-  .rise {
-    animation: rise 2.2s var(--ease-out) both;
-    animation-delay: 0.15s;
+  .hero-lines > span > span {
+    animation: line-up 1.15s var(--ease-out) both;
+    animation-delay: calc(0.2s + var(--l, 0) * 0.13s);
   }
+}
+@keyframes line-up {
+  from {
+    transform: translate3d(0, 105%, 0);
+  }
+}
+
+/* hero button: one entry on load, after the headline */
+@media (prefers-reduced-motion: no-preference) {
   .enter {
     animation: enter 0.9s var(--ease-out) both;
     animation-delay: calc(0.25s + var(--i, 0) * 0.12s);
   }
 }
-
-@keyframes rise {
-  from {
-    transform: translateY(42%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
 @keyframes enter {
   from {
     opacity: 0;
     transform: translateY(12px);
   }
-  to {
-    opacity: 1;
-    transform: none;
+}
+
+/* ---------- Touch & feel (components/Interactions.tsx, HeroLight, EclipseToy) ---------- */
+
+/* buttons lean toward the mouse */
+[data-magnetic] {
+  transform: translate3d(var(--mag-x, 0), var(--mag-y, 0), 0);
+  transition:
+    transform 0.6s var(--ease-out),
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+[data-magnetic][data-magnet-on] {
+  transition-duration: 0.18s, 0.2s, 0.2s, 0.2s;
+}
+
+/* cards tilt toward the mouse, with a light glare where it points */
+[data-tilt] {
+  transform: perspective(1100px) rotateX(var(--tilt-rx, 0deg)) rotateY(var(--tilt-ry, 0deg));
+  transition:
+    transform 0.7s var(--ease-out),
+    border-color 0.3s;
+}
+[data-tilt][data-tilting] {
+  transition:
+    transform 0.14s linear,
+    border-color 0.3s;
+}
+[data-tilt]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    color-mix(in oklch, white 30%, transparent),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out);
+}
+[data-tilt][data-tilting]::before {
+  opacity: 1;
+}
+/* touch: the card in the middle of the screen plays like a hovered one */
+.group[data-active="true"] .card-art {
+  transform: scale(1.045);
+}
+.group[data-active="true"] .card-arrow {
+  transform: translate3d(3px, -3px, 0);
+}
+.group[data-active="true"] .nudge-x {
+  transform: translate3d(5px, 0, 0);
+}
+
+/* the spark over the home picture */
+.hero-light,
+.hero-spark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+  will-change: transform;
+}
+.hero-light {
+  width: 44rem;
+  height: 44rem;
+  margin: -22rem 0 0 -22rem;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--copper), white 20%) 0%,
+    color-mix(in oklch, var(--copper) 75%, transparent) 26%,
+    transparent 66%
+  );
+  mix-blend-mode: soft-light;
+}
+.hero-spark {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin: -0.25rem 0 0 -0.25rem;
+  background: color-mix(in oklch, var(--paper), white 40%);
+  box-shadow:
+    0 0 0.6rem 0.2rem color-mix(in oklch, var(--copper), white 40%),
+    0 0 2.4rem 0.8rem color-mix(in oklch, var(--copper) 45%, transparent);
+}
+[data-lit] > .hero-light {
+  opacity: 1;
+}
+[data-lit] > .hero-spark {
+  opacity: 1;
+}
+@media (hover: none) {
+  .hero-light {
+    width: 26rem;
+    height: 26rem;
+    margin: -13rem 0 0 -13rem;
   }
+}
+
+/* the eclipse at the end of the story */
+.eclipse-toy {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  touch-action: none;
+}
+.toy-handle {
+  cursor: grab;
+  outline: none;
+}
+.is-dragging .toy-handle {
+  cursor: grabbing;
+}
+.toy-handle:focus-visible .toy-copper {
+  stroke: var(--paper);
+  stroke-width: 3;
+}
+.toy-corona {
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  transform: scale(0.7);
+  transition:
+    opacity 1.2s var(--ease-out),
+    transform 1.6s var(--ease-out);
+}
+.is-locked .toy-corona {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* the copper disc breathes until someone picks it up */
+  .eclipse-toy:not(.is-locked):not(.is-dragging) .toy-copper {
+    animation: toy-float 3.2s ease-in-out infinite;
+  }
+}
+@keyframes toy-float {
+  50% {
+    transform: translate(-6px, -5px);
+  }
+}
+.eclipse-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: color-mix(in oklch, var(--night) 55%, transparent);
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out);
+}
+[data-eclipse] > .eclipse-veil {
+  opacity: 1;
+}
+.sign-off {
+  transition:
+    color 1.2s var(--ease-out),
+    text-shadow 1.2s var(--ease-out);
+}
+[data-eclipse] .sign-off {
+  color: color-mix(in oklch, var(--copper), white 35%);
+  text-shadow: 0 0 1.4rem color-mix(in oklch, var(--copper) 70%, transparent);
 }
 
 /* ---------- Project plates ---------- */
@@ -264,6 +400,140 @@ body {
   transition-timing-function: var(--ease-out);
 }
 
+/* ---------- Scroll reveal ----------
+ * Elements marked data-reveal start lowered and transparent, and rise once when
+ * they enter the viewport (components/RevealObserver.tsx). Only opacity and
+ * transform change, so nothing reflows and the page never jumps on a phone.
+ * The `js` class is set by an inline script before first paint and removed
+ * again if the observer never starts, so content is never lost without JS.
+ */
+.title-lines > span {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    transition:
+      opacity 0.9s var(--ease-out),
+      transform 0.9s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+  .js [data-reveal]:not([data-shown]) {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+  /* section titles rise line by line from behind a mask */
+  .js .title-lines > span {
+    overflow: clip;
+    overflow-clip-margin: 0.2em;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+  .js .title-lines > span > span {
+    display: block;
+    transition: transform 1.1s var(--ease-out);
+    transition-delay: calc(var(--l, 0) * 110ms);
+  }
+  .js .title-lines:not([data-shown]) > span > span {
+    transform: translate3d(0, 105%, 0);
+  }
+}
+
+/* ---------- Skeletons ---------- */
+
+.skeleton {
+  --sk-a: color-mix(in oklch, var(--line) 70%, var(--paper));
+  --sk-b: color-mix(in oklch, var(--line), white 35%);
+  background: linear-gradient(100deg, var(--sk-a) 35%, var(--sk-b) 50%, var(--sk-a) 65%) 0 0 / 300% 100%;
+  border-radius: var(--r-sm);
+}
+.skeleton-night,
+[data-theme="night"] .skeleton,
+.plate .skeleton {
+  --sk-a: color-mix(in oklch, var(--paper) 6%, var(--night));
+  --sk-b: color-mix(in oklch, var(--paper) 13%, var(--night));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton {
+    animation: shimmer 1.6s linear infinite;
+  }
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* Lazily mounted plates and images fade in over their skeleton. */
+.lazy-in {
+  animation: lazy-in 0.7s var(--ease-out) both;
+}
+@keyframes lazy-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Page transitions (React <ViewTransition>, components/PageTransition.tsx) ---------- */
+
+::view-transition-old(.page-out) {
+  animation: 180ms ease-in both page-fade reverse;
+}
+::view-transition-new(.page-in) {
+  animation:
+    320ms var(--ease-out) 120ms both page-fade,
+    520ms var(--ease-out) 120ms both page-rise;
+}
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes page-rise {
+  from {
+    transform: translateY(18px);
+  }
+}
+
+/* ---------- Cards: hover only where a pointer can hover ---------- */
+
+.card-art {
+  transition: transform 1.2s var(--ease-out);
+}
+.card-arrow,
+.nudge-x {
+  transition: transform 0.45s var(--ease-out);
+}
+@media (hover: hover) {
+  .group:hover .card-art {
+    transform: scale(1.045);
+  }
+  .group:hover .card-arrow {
+    transform: translate3d(3px, -3px, 0);
+  }
+  .group:hover .nudge-x {
+    transform: translate3d(5px, 0, 0);
+  }
+}
+.group:focus-within .card-arrow {
+  transform: translate3d(3px, -3px, 0);
+}
+.group:focus-within .nudge-x {
+  transform: translate3d(5px, 0, 0);
+}
+/* touch: a short press response instead of a hover state */
+@media (hover: none) {
+  .press {
+    transition: transform 0.25s var(--ease-out);
+  }
+  .press:active {
+    transform: scale(0.985);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -271,5 +541,10 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-property: color, background-color, border-color, opacity !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

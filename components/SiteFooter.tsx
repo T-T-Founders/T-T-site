@@ -3,9 +3,9 @@ import { Mark, Wordmark } from "./Logo";
 import { orgGithub } from "@/lib/projects";
 
 const LINKS = [
-  { href: "/#skills", label: "Skills" },
-  { href: "/#applications", label: "Applications" },
-  { href: "/#games", label: "Games" },
+  { href: "/skills", label: "Skills" },
+  { href: "/applications", label: "Applications" },
+  { href: "/games", label: "Games" },
   { href: "/#about", label: "About" },
 ];
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PageTransition from "./PageTransition";
 
 export type Fact = { label: string; value: React.ReactNode };
 export type ListBlock = {
@@ -10,9 +11,7 @@ export type ListBlock = {
 type Props = {
   theme: "paper" | "night";
   back: { href: string; label: string };
-  kind: string;
   name: string;
-  nativeName?: string;
   lead: React.ReactNode;
   facts: Fact[];
   blocks: ListBlock[];
@@ -24,11 +23,12 @@ type Props = {
  * Internal product page for projects without their own website.
  * Name, a short description, verified facts, and where the source lives.
  */
-export default function ProductPage({ theme, back, kind, name, nativeName, lead, facts, blocks, visual, after }: Props) {
+export default function ProductPage({ theme, back, name, lead, facts, blocks, visual, after }: Props) {
   const night = theme === "night";
   const mute = night ? "text-night-mute" : "text-mute";
   const line = night ? "border-night-line" : "border-line";
   return (
+    <PageTransition>
     <article
       data-theme={theme}
       className={night ? "bg-night text-paper" : "bg-paper text-ink"}
@@ -40,19 +40,17 @@ export default function ProductPage({ theme, back, kind, name, nativeName, lead,
 
         <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-8">
           <header className="lg:col-span-7">
-            <p className={`text-[0.8rem] font-medium tracking-[0.08em] uppercase ${mute}`}>{kind}</p>
-            <h1 className="display mt-4 text-[clamp(3.2rem,1.8rem+5vw,6.5rem)]">{name}</h1>
-            {nativeName ? (
-              <p lang="ru" className={`mt-3 font-display text-[1.5rem] italic ${mute}`}>
-                {nativeName}
-              </p>
-            ) : null}
-            <div className={`mt-8 max-w-[52ch] text-[1.15rem] leading-[1.65] ${night ? "text-paper/90" : "text-ink/90"}`}>
+            <h1 className="display hero-lines text-[clamp(3.2rem,1.8rem+5vw,6.5rem)]">
+              <span>
+                <span>{name}</span>
+              </span>
+            </h1>
+            <div data-reveal className={`mt-8 max-w-[52ch] text-[1.15rem] leading-[1.65] ${night ? "text-paper/90" : "text-ink/90"}`}>
               {lead}
             </div>
           </header>
 
-          <dl className={`self-start border-t ${line} lg:col-span-4 lg:col-start-9`}>
+          <dl data-reveal style={{ ["--i" as string]: 1 }} className={`self-start border-t ${line} lg:col-span-4 lg:col-start-9`}>
             {facts.map((f) => (
               <div key={f.label} className={`grid grid-cols-[8.5rem_1fr] gap-4 border-b ${line} py-4 text-[0.95rem]`}>
                 <dt className={mute}>{f.label}</dt>
@@ -62,13 +60,13 @@ export default function ProductPage({ theme, back, kind, name, nativeName, lead,
           </dl>
         </div>
 
-        {visual ? <div className="mt-16 sm:mt-20">{visual}</div> : null}
+        {visual ? <div data-reveal className="mt-16 sm:mt-20">{visual}</div> : null}
 
         <div className="mt-16 grid gap-12 sm:mt-20 md:grid-cols-2 lg:gap-16">
           {blocks.map((b) => {
             const List = b.ordered ? "ol" : "ul";
             return (
-              <section key={b.title} aria-labelledby={`b-${b.title}`}>
+              <section key={b.title} data-reveal aria-labelledby={`b-${b.title}`}>
                 <h2 id={`b-${b.title}`} className="font-display text-[2.1rem] leading-none tracking-[-0.015em]">
                   {b.title}
                 </h2>
@@ -95,5 +93,6 @@ export default function ProductPage({ theme, back, kind, name, nativeName, lead,
         {after}
       </div>
     </article>
+    </PageTransition>
   );
 }

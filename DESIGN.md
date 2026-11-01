@@ -39,7 +39,7 @@ choices is anchored in the mark, not taken from the prior:
 | `--line` | `oklch(0.880 0.012 65)` / `#DDD5CB` | hairlines, card borders | paper darkened |
 | `--night` | `oklch(0.205 0.012 310)` / `#1D1A1F` | Games section, project plates | the dusk of the game reference |
 
-The mark's artwork (`components/Logo.tsx`, `EclipseHorizon.tsx`, `app/icon.svg`)
+The mark's artwork (`components/Logo.tsx`, `app/icon.svg`)
 keeps its own gradient stops: those are the logo, sampled from the supplied
 artwork, not UI colors. No component outside the mark uses a raw hex.
 
@@ -81,24 +81,43 @@ desktop); regular for the project directory (card gutters 20px).
 
 ## Motion philosophy
 
-Motion describes light and position, never decoration: the discs rise and
-cross; everything else only acknowledges input.
+Revised on the client's request: the site should feel more animated, on phones
+too, without the page ever jumping. Every animation moves only `opacity` and
+`transform`, so nothing reflows.
 
-Allowed:
-- Signature: discs rise over the horizon once on load, then cross slowly
-  (one 22 s cycle). The overlap area drives the horizon light (eclipse dims it).
-- One load sequence: header, then headline, then sentence + button (opacity +
-  12px), finished in under 1.2 s.
-- Hover/focus: link underline grows, card border darkens, the illustration on a
-  project plate responds in a way that explains the product (the search
-  highlight in TKRS moves, the TK3D mesh turns).
-- Header state change (paper ↔ night) when scrolling into the Games section,
-  because the page background changes underneath it.
+- Home: one still picture (the eclipse over a planet, hills, a river at dusk)
+  in a window; the three story screens over it only fade in once, like every
+  other section. No pinning, no scroll-driven animation.
+- Touch & feel (client asked for a site you can "touch"):
+  - the pointer (or a finger) is a warm spark that lights the home picture;
+  - cards tilt toward the mouse with a glare; on phones the card in the middle
+    of the screen plays its drawing the way hover does on desktop;
+  - View projects and GitHub lean toward the mouse;
+  - the story ends with a toy: drag the copper disc onto the grey one; when they
+    meet in the eclipse of the mark the sky darkens and "T&T Labs" lights up.
+  Mouse effects are off under reduced motion; the toy works with arrow keys.
+- Section headings rise line by line, and cards rise in a short stagger, when
+  they scroll into view (`data-reveal`, `components/RevealObserver.tsx`).
+- Route changes cross-fade through React `<ViewTransition>` (`PageTransition`).
+- Hover (pointer devices only): border darkens, art zooms inside its frame,
+  arrows nudge, plate drawings show what the product does. Touch: a light
+  press response instead, so no hover state sticks on a phone.
+- Mobile menu overlays the page (it never pushes content down) and its links
+  stagger in.
+- Lazy loading: project drawings mount when near the viewport (`LazyMount`),
+  images are lazy `next/image` over a shimmer (`FadeImage`); each route has a
+  `loading.tsx` skeleton with the same grid as the page.
 
-Forbidden: fade-up on scroll for every section, hover scale on cards, animated
-arrows, marquees, parallax, scroll hijacking, loading screens, particles.
-`prefers-reduced-motion: reduce` renders the discs in their final position with
-no loop, and removes all transitions except color.
+Still forbidden: parallax, scroll hijacking (the story pins, it never takes over the wheel), marquees, particles, hover scale
+on whole cards, loading screens. `prefers-reduced-motion: reduce` shows
+everything in place: no reveals, no page transitions.
+
+## Surface and grain
+
+- Home picture: `public/images/hero/landscape.webp`, supplied by the client
+  (860 x 1828). It is upscaled on wide screens; a larger original would be sharper.
+- Film grain on pictures only (`.grain-on`: plates, illustrations, screenshots,
+  the home picture), never on the page background, as in the reference.
 
 ## Signature
 
@@ -116,34 +135,30 @@ headings. No other section contains a planet, orb or glow.
 
 ## Layout concept
 
-One continuous page in the reference order, with a sticky header whose active
-link tracks the section in view.
+Four screens, as in the references. Home is the hero plus the team's
+philosophy; each division has its own route.
 
 ```
-+----------------------------------------------------------------+
-| (o0) T&T Labs      Skills  Applications  Games  About     (↗)  |
-|                                                    (  )(  )    |
-| T&T Labs                                          discs         |
-| Developer tools, software and games...       _____-----^^^^^   |
-| [View projects →]                      ___---    planet         |
-+----------------------------------------------------------------+
-| We started            |  paragraph (3 sentences)               |
-| in college.           |                                        |
-| ----------------------                                         |
-| [ dark band: Skills 4 · Applications 3 · Games 1 directory ]   |
-+----------------------------------------------------------------+
-| Skills for AI agents.                       one-line context   |
-| [plate][plate][plate][plate]  (4 repos → GitHub)               |
-+----------------------------------------------------------------+
-| Applications ...                            one-line context   |
-| [ IZDAR large dark plate     ] [ VeloBoost ]                   |
-| [                            ] [ MyPC      ]                   |
-+---------------------------- night -----------------------------+
-| Games heading                                                  |
-| [ wide game plate with game art → internal page ]              |
-| footer: mark, nav, GitHub, ©                                   |
-+----------------------------------------------------------------+
+/              one picture in a rounded window with paper around it
+               (public/images/hero/landscape.webp, grain on top), and the story
+               over it, top to bottom:
+                 hero: "We build tools, apps and games." + View projects (-> /skills),
+                       on the pale sky, the picture's eclipse beside it
+                 then the story in three screens on the dark hills (lib/story.ts):
+                 "It began with something small." / "One light caught another." /
+                 "When two orbits meet, the sky changes." ... "T&T Labs"
+               nothing else: the divisions are reached from the header only
+/skills        "Skills for AI agents."  four plates -> GitHub
+/applications  "Software for Windows and industry."  IZDAR lead + two plates
+/games         night. "One game, in development."  one wide SVG plate -> game page
+               (eclipsed sun over Aktobe panel blocks; screenshots stay on the
+               game's own page)
 ```
+
+Copy rule (client): one heading, one sentence, a clean card, a click. No
+eyebrows (`01 / SKILLS`, "INDUSTRIAL SOFTWARE", "Dark fantasy · Godot"), no
+native-name subtitles, no side captions that repeat the heading, no footer
+captions under banners.
 
 ## Content model
 
@@ -259,8 +274,9 @@ MOTION jobs:   disc crossing -> overlap area dims the horizon (it is an eclipse)
 VERDICT: ship
 ```
 
-Changes made because of the audit: removed the planet surface texture (tile
-seams, and it competed with the signature), removed the decorative ring and
+Changes made because of the audit: removed the tiled planet surface texture
+(tile seams, and it competed with the signature; later replaced by a single
+seamless relief, see below), removed the decorative ring and
 monitor drawings from the VeloBoost and MyPC pages (they only repeated the
 home-page cards), switched internal "Product page" arrows from ↗ to →, made the
 header solid as soon as the page scrolls.

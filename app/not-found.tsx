@@ -13,15 +13,12 @@ export default function NotFound() {
         <br />
         <em>found.</em>
       </h1>
-      <p className="mt-8 max-w-[44ch] text-[1.1rem] leading-[1.65] text-ink/90">
-        This address does not match any page on the site. The projects are listed on the home page.
-      </p>
       <ul className="mt-10 flex flex-wrap gap-3">
         {[
           { href: "/", label: "Home" },
-          { href: "/#skills", label: "Skills" },
-          { href: "/#applications", label: "Applications" },
-          { href: "/#games", label: "Games" },
+          { href: "/skills", label: "Skills" },
+          { href: "/applications", label: "Applications" },
+          { href: "/games", label: "Games" },
         ].map((l, i) => (
           <li key={l.href}>
             <Link
