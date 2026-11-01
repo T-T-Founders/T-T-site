@@ -39,7 +39,7 @@ choices is anchored in the mark, not taken from the prior:
 | `--line` | `oklch(0.880 0.012 65)` / `#DDD5CB` | hairlines, card borders | paper darkened |
 | `--night` | `oklch(0.205 0.012 310)` / `#1D1A1F` | Games section, project plates | the dusk of the game reference |
 
-The mark's artwork (`components/Logo.tsx`, `components/Hero.tsx`, `app/icon.svg`)
+The mark's artwork (`components/Logo.tsx`, `components/EclipseHorizon.tsx`, `components/Story.tsx`, `app/icon.svg`)
 keeps its own gradient stops: those are the logo, sampled from the supplied
 artwork, not UI colors. No component outside the mark uses a raw hex.
 
