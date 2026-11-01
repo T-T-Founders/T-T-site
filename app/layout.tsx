@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { EB_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import RevealObserver from "@/components/RevealObserver";
+import Interactions from "@/components/Interactions";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -54,18 +56,29 @@ export const viewport: Viewport = {
   themeColor: "#F3EFE9",
 };
 
+const REVEAL_BOOT =
+  "(function(d){d.classList.add('js');setTimeout(function(){if(!window.__revealReady)d.classList.remove('js')},2500)})(document.documentElement)";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
       className={`${garamond.variable} ${plex.variable} ${plexMono.variable}`}
     >
+      <head>
+        {/* Arms the scroll reveal before first paint; disarms it if the app never starts. */}
+        <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOT }} />
+      </head>
       <body className="flex min-h-svh flex-col">
         <SiteHeader />
         <main id="main" className="flex-1">
           {children}
         </main>
         <SiteFooter />
+        <RevealObserver />
+        <Interactions />
       </body>
     </html>
   );

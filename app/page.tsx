@@ -1,17 +1,10 @@
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Skills from "@/components/Skills";
-import Applications from "@/components/Applications";
-import Games from "@/components/Games";
+import PageTransition from "@/components/PageTransition";
 
 export default function Home() {
   return (
-    <>
+    <PageTransition>
       <Hero />
-      <About />
-      <Skills />
-      <Applications />
-      <Games />
-    </>
+    </PageTransition>
   );
 }

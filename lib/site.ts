@@ -7,6 +7,9 @@ export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:30
 
 export const routes = [
   "/",
+  "/skills",
+  "/applications",
+  "/games",
   "/applications/veloboost",
   "/applications/mypc",
   "/games/chernaya-tamga",
