@@ -33,42 +33,6 @@ export const story = {
     caption: "One of us built a custom Gem in Gemini. The other tried making a first Telegram bot.",
   },
   final: {
-    title: "T&T Labs",
     line: `${countWord(projectCount)} projects later, we're still building.`,
   },
 } as const;
-
-/** Tools that show up around the discs on the third screen. Text only, no logos. */
-export const tools = [
-  "Gemini",
-  "Telegram",
-  "Claude Code",
-  "Codex",
-  "Roblox Studio",
-  "Blender",
-  "Godot",
-  "Cloudflare",
-];
-
-export type ChatLine = { from: "user" | "bot"; text: string };
-
-// TODO: replace with real lines from the original bots
-export const botMockups: {
-  gem: { title: string; lines: ChatLine[] };
-  telegram: { title: string; lines: ChatLine[] };
-} = {
-  gem: {
-    title: "My Gem",
-    lines: [
-      { from: "user", text: "Hi" },
-      { from: "bot", text: "Hi! I'm a custom Gem." },
-    ],
-  },
-  telegram: {
-    title: "My first bot",
-    lines: [
-      { from: "user", text: "/start" },
-      { from: "bot", text: "Hi! I'm a bot." },
-    ],
-  },
-};

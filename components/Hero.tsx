@@ -3,14 +3,12 @@ import EclipseHorizon from "./EclipseHorizon";
 
 export default function Hero() {
   return (
-    <section
-      data-theme="sky"
-      aria-labelledby="hero-title"
-      className="hero-sky relative -mt-[var(--header-h)] flex min-h-[max(100svh,600px)] flex-col overflow-hidden pt-[var(--header-h)] lg:min-h-[max(100svh,760px)]"
-    >
+    <section data-theme="sky" aria-labelledby="hero-title" className="px-[var(--gutter)] pb-[var(--gutter)]">
+      {/* the scene sits in a window with paper around it */}
+      <div className="hero-window hero-sky relative mx-auto flex min-h-[max(calc(100svh-var(--header-h)-var(--gutter)),560px)] max-w-[1600px] flex-col overflow-hidden rounded-md lg:min-h-[max(calc(100svh-var(--header-h)-var(--gutter)),680px)]">
       <EclipseHorizon />
-      <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col px-[var(--gutter)]">
-        <div className="pt-[12vh] sm:pt-[18vh] lg:pt-[24vh]">
+      <div className="relative flex w-full flex-1 flex-col px-6 sm:px-10 lg:px-16">
+        <div className="pt-[9vh] sm:pt-[14vh] lg:pt-[18vh]">
           <h1
             id="hero-title"
             className="display hero-lines text-[clamp(2.9rem,1.3rem+5.8vw,7.2rem)] leading-[1.02]"
@@ -36,6 +34,7 @@ export default function Hero() {
             </Link>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

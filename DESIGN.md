@@ -39,7 +39,7 @@ choices is anchored in the mark, not taken from the prior:
 | `--line` | `oklch(0.880 0.012 65)` / `#DDD5CB` | hairlines, card borders | paper darkened |
 | `--night` | `oklch(0.205 0.012 310)` / `#1D1A1F` | Games section, project plates | the dusk of the game reference |
 
-The mark's artwork (`components/Logo.tsx`, `components/EclipseHorizon.tsx`, `components/Story.tsx`, `app/icon.svg`)
+The mark's artwork (`components/Logo.tsx`, `components/EclipseHorizon.tsx`, `app/icon.svg`)
 keeps its own gradient stops: those are the logo, sampled from the supplied
 artwork, not UI colors. No component outside the mark uses a raw hex.
 
@@ -89,8 +89,8 @@ too, without the page ever jumping. Every animation moves only `opacity` and
   (one 22 s cycle). The overlap area drives the horizon light (eclipse dims it).
   A dark hilltop (scripts/hero-ridge.py) rises into the foreground on load, so
   the planet reads as the view from a summit.
-- The story under the hero is static: each screen only fades in once, like
-  every other section. No pinning, no scroll-driven animation.
+- The story under the hero is static: its blocks only fade in once, like every
+  other section. No pinning, no scroll-driven animation, no discs.
 - Section headings rise line by line, and cards rise in a short stagger, when
   they scroll into view (`data-reveal`, `components/RevealObserver.tsx`).
 - Route changes cross-fade through React `<ViewTransition>` (`PageTransition`).
@@ -138,12 +138,13 @@ Four screens, as in the references. Home is the hero plus the team's
 philosophy; each division has its own route.
 
 ```
-/              hero: "We build tools, apps and games." + View projects (-> /skills),
-               the eclipse over the planet, a dark hilltop in the foreground
-               the story, three plain screens (components/Story.tsx):
-                 1 "Two friends from college."      discs far apart
-                 2 "It started with two small bots." discs closer, two chat mockups
-                 3 "T&T Labs", "N projects later..." the eclipse, tools and projects around it
+/              hero, in a rounded window with paper around it:
+                 "We build tools, apps and games." + View projects (-> /skills),
+                 the eclipse over the planet, a dark hilltop in the foreground
+               the story, one compact section (components/Story.tsx):
+                 "Two friends from college." | "It started with two small bots."
+                 each over a vista: a crop of the hero world without the discs
+                 "N projects later, we're still building." + View projects
                nothing else: the divisions are reached from the header only
 /skills        "Skills for AI agents."  four plates -> GitHub
 /applications  "Software for Windows and industry."  IZDAR lead + two plates
