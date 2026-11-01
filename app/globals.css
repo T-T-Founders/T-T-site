@@ -151,106 +151,30 @@ body {
   border-radius: inherit;
 }
 
-/* ---------- Hero scene ---------- */
+/* ---------- Home picture (components/Hero.tsx) ---------- */
 
-.hero-sky {
-  background:
-    radial-gradient(
-      60% 55% at 86% 66%,
-      color-mix(in oklch, var(--copper) 34%, transparent),
-      transparent 70%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in oklch, var(--paper), var(--copper) 8%) 0%,
-      color-mix(in oklch, var(--paper), var(--copper) 16%) 55%,
-      color-mix(in oklch, var(--paper), var(--copper) 30%) 100%
-    );
-}
-
-.planet,
-.planet-haze {
+/* Shade behind the copy on the dark hills: covers screens 2 and 3, fades in
+   from the sky above, darkest on the side where the text sits. */
+.story-shade {
   position: absolute;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  width: var(--planet-w);
-  left: var(--planet-x);
-  top: var(--planet-y);
+  inset: calc(100% / 3) 0 0 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--night) 62%, transparent) 0%,
+    color-mix(in oklch, var(--night) 34%, transparent) 42%,
+    transparent 72%
+  );
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 12%);
 }
-
-.planet {
-  /*
-   * Lit only at the rim: the light source sits behind the horizon.
-   * Top layer: shadow over the interior, clearing toward the rim, then the
-   * copper rim line. Middle: the lit surface relief, placed on the cap that is
-   * visible in the hero (scripts/planet-surface.py renders it for exactly that
-   * span: 14%..52% of the diameter across, from the top). Bottom: base shadow.
-   */
-  --planet-shadow: color-mix(in oklch, var(--night), black 34%);
-  background:
-    radial-gradient(
-      circle closest-side,
-      var(--planet-shadow) 0%,
-      var(--planet-shadow) 84%,
-      color-mix(in oklch, var(--planet-shadow) 60%, transparent) 91%,
-      color-mix(in oklch, var(--planet-shadow) 18%, transparent) 96%,
-      transparent 98.4%,
-      color-mix(in oklch, var(--copper) 55%, transparent) 99%,
-      color-mix(in oklch, var(--copper), black 8%) 99.5%,
-      color-mix(in oklch, var(--copper), white 35%) 100%
-    ),
-    url("/images/hero/planet-surface.webp") calc(var(--planet-w) * 0.14) 0 / calc(var(--planet-w) * 0.38) auto
-      no-repeat,
-    var(--planet-shadow);
-  overflow: hidden;
-}
-
-.planet-haze {
-  box-shadow:
-    0 0 0.6cqw 0.1cqw color-mix(in oklch, var(--copper), white 30%),
-    0 0 2.6cqw 0.5cqw color-mix(in oklch, var(--copper) 70%, transparent),
-    0 0 8cqw 2cqw color-mix(in oklch, var(--copper) 30%, transparent);
-  opacity: var(--light, 1);
-  will-change: opacity;
-}
-
-/*
- * The hero sits in a window with paper around it. The scene is measured in
- * container units (cqw) of that window, so it keeps its composition at any size.
- */
-.hero-window {
-  container-type: inline-size;
-}
-
-.hero-scene {
-  /* circle fitted to the horizon of the hero reference */
-  --planet-w: 320cqw;
-  --planet-x: -51cqw;
-  --planet-y: calc(100% - 28.8cqw);
-  --discs-w: 40cqw;
-  --discs-x: 58cqw;
-  --discs-y: calc(100% - 47cqw);
-}
-
 @media (max-width: 1023px) {
-  .hero-scene {
-    --planet-w: 320cqw;
-    --planet-x: -51cqw;
-    --planet-y: calc(100% - 40cqw);
-    --discs-w: 56cqw;
-    --discs-x: 40cqw;
-    --discs-y: calc(100% - 65cqw);
-  }
-}
-
-@media (max-width: 639px) {
-  .hero-scene {
-    --planet-w: 320cqw;
-    --planet-x: -60cqw;
-    --planet-y: calc(100% - 50cqw);
-    --discs-w: 72cqw;
-    --discs-x: 22cqw;
-    --discs-y: calc(100% - 82cqw);
+  .story-shade {
+    inset: 19% 0 0 0;
+    background: color-mix(in oklch, var(--night) 44%, transparent);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 6%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 6%);
   }
 }
 
@@ -275,141 +199,6 @@ body {
   from {
     transform: translate3d(0, 105%, 0);
   }
-}
-
-/* foreground: the dark hilltop the viewer stands on (scripts/hero-ridge.py) */
-.hero-ridge {
-  position: absolute;
-  left: -1px;
-  bottom: -1px;
-  width: min(52cqw, 70svh);
-  aspect-ratio: 1600 / 640;
-  background: url("/images/hero/ridge.webp") 0 0 / 100% 100% no-repeat;
-}
-@media (max-width: 1023px) {
-  .hero-ridge {
-    width: 64cqw;
-  }
-}
-@media (max-width: 639px) {
-  .hero-ridge {
-    width: 70cqw;
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hero-ridge {
-    animation: ridge-in 1.8s var(--ease-out) both;
-  }
-}
-@keyframes ridge-in {
-  from {
-    transform: translate3d(0, 18%, 0);
-  }
-}
-
-.discs {
-  position: absolute;
-  width: var(--discs-w);
-  left: var(--discs-x);
-  top: var(--discs-y);
-  aspect-ratio: 2 / 1;
-}
-
-/* ---------- Entry sequence (one, on load) ---------- */
-
-@media (prefers-reduced-motion: no-preference) {
-  .rise {
-    animation: rise 2.2s var(--ease-out) both;
-    animation-delay: 0.15s;
-  }
-  .enter {
-    animation: enter 0.9s var(--ease-out) both;
-    animation-delay: calc(0.25s + var(--i, 0) * 0.12s);
-  }
-}
-
-
-@keyframes rise {
-  from {
-    transform: translateY(42%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-
-/* ---------- Home story (components/Story.tsx) ---------- */
-
-.story-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  font-size: clamp(2.2rem, 1.3rem + 3.2vw, 4.4rem);
-  max-width: 13ch;
-  text-wrap: balance;
-}
-.story-caption {
-  margin-top: 1.1rem;
-  max-width: 34ch;
-  font-size: clamp(1.02rem, 0.95rem + 0.3vw, 1.25rem);
-  line-height: 1.55;
-  color: color-mix(in oklch, var(--ink) 86%, transparent);
-}
-.story-place {
-  margin-top: 1.5rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.55rem 0.95rem;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: var(--raised);
-  font-size: 0.9rem;
-}
-.story-place-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--copper);
-}
-
-/*
- * Vistas: crops of the hero world (sky, lit planet, the hilltop) without the
- * discs, for the story. Same layers and textures as the hero, own framing.
- */
-.vista {
-  container-type: inline-size;
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--r-md);
-  aspect-ratio: 4 / 3;
-}
-.vista-horizon {
-  --planet-w: 260cqw;
-  --planet-x: -40cqw;
-  --planet-y: calc(100% - 46cqw);
-}
-.vista-summit {
-  --planet-w: 420cqw;
-  --planet-x: -58.8cqw;
-  --planet-y: calc(100% - 24cqw);
-}
-.vista .hero-ridge {
-  width: 112cqw;
-  animation: none;
 }
 
 /* ---------- Project plates ---------- */

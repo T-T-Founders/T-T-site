@@ -39,7 +39,7 @@ choices is anchored in the mark, not taken from the prior:
 | `--line` | `oklch(0.880 0.012 65)` / `#DDD5CB` | hairlines, card borders | paper darkened |
 | `--night` | `oklch(0.205 0.012 310)` / `#1D1A1F` | Games section, project plates | the dusk of the game reference |
 
-The mark's artwork (`components/Logo.tsx`, `components/EclipseHorizon.tsx`, `app/icon.svg`)
+The mark's artwork (`components/Logo.tsx`, `app/icon.svg`)
 keeps its own gradient stops: those are the logo, sampled from the supplied
 artwork, not UI colors. No component outside the mark uses a raw hex.
 
@@ -85,12 +85,9 @@ Revised on the client's request: the site should feel more animated, on phones
 too, without the page ever jumping. Every animation moves only `opacity` and
 `transform`, so nothing reflows.
 
-- Signature: discs rise over the horizon once on load, then cross slowly
-  (one 22 s cycle). The overlap area drives the horizon light (eclipse dims it).
-  A dark hilltop (scripts/hero-ridge.py) rises into the foreground on load, so
-  the planet reads as the view from a summit.
-- The story under the hero is static: its blocks only fade in once, like every
-  other section. No pinning, no scroll-driven animation, no discs.
+- Home: one still picture (the eclipse over a planet, hills, a river at dusk)
+  in a window; the three story screens over it only fade in once, like every
+  other section. No pinning, no scroll-driven animation.
 - Section headings rise line by line, and cards rise in a short stagger, when
   they scroll into view (`data-reveal`, `components/RevealObserver.tsx`).
 - Route changes cross-fade through React `<ViewTransition>` (`PageTransition`).
@@ -105,18 +102,14 @@ too, without the page ever jumping. Every animation moves only `opacity` and
 
 Still forbidden: parallax, scroll hijacking (the story pins, it never takes over the wheel), marquees, particles, hover scale
 on whole cards, loading screens. `prefers-reduced-motion: reduce` shows
-everything in place: static discs, no reveals, no page transitions.
+everything in place: no reveals, no page transitions.
 
 ## Surface and grain
 
-- Planet relief: `public/images/hero/planet-surface.webp`, rendered by
-  `scripts/planet-surface.py` (rocky heightmap with craters, lit by a low copper light).
-  One image, no tiling, covering only the cap of the planet visible in the hero;
-  everything outside the rim band is flattened so the file stays ~70 KB. CSS
-  darkens it toward the planet's interior, so the relief reads only near the lit
-  rim, as in the hero reference.
+- Home picture: `public/images/hero/landscape.webp`, supplied by the client
+  (860 x 1828). It is upscaled on wide screens; a larger original would be sharper.
 - Film grain on pictures only (`.grain-on`: plates, illustrations, screenshots,
-  the hero scene), never on the page background, as in the reference.
+  the home picture), never on the page background, as in the reference.
 
 ## Signature
 
@@ -138,13 +131,13 @@ Four screens, as in the references. Home is the hero plus the team's
 philosophy; each division has its own route.
 
 ```
-/              hero, in a rounded window with paper around it:
-                 "We build tools, apps and games." + View projects (-> /skills),
-                 the eclipse over the planet, a dark hilltop in the foreground
-               the story, one compact section (components/Story.tsx):
-                 "Two friends from college." | "It started with two small bots."
-                 each over a vista: a crop of the hero world without the discs
-                 "N projects later, we're still building." + View projects
+/              one picture in a rounded window with paper around it
+               (public/images/hero/landscape.webp, grain on top), and the story
+               over it in three screens (lib/story.ts):
+                 1 "It began with something small."          on the pale sky
+                 2 "One light caught another."               on the dark hills
+                 3 "When two orbits meet, the sky changes."  ... "T&T Labs"
+               narrow windows show the eclipse first, then the copy below it
                nothing else: the divisions are reached from the header only
 /skills        "Skills for AI agents."  four plates -> GitHub
 /applications  "Software for Windows and industry."  IZDAR lead + two plates
