@@ -24,7 +24,7 @@ export default function Skills() {
           const Plate = PLATES[s.slug];
           return (
             <li key={s.slug} data-reveal style={{ ["--i" as string]: i }}>
-              <article className="group press relative flex h-full flex-col overflow-hidden rounded-md border border-line bg-raised transition-colors duration-300 hover:border-ink/40 focus-within:border-ink/40 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-copper">
+              <article data-tilt="7" className="group press relative flex h-full flex-col overflow-hidden rounded-md border border-line bg-raised transition-colors duration-300 hover:border-ink/40 focus-within:border-ink/40 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-copper">
                 <div className="plate grain-on relative aspect-[320/240] overflow-hidden">
                   <LazyMount>
                     <Plate />

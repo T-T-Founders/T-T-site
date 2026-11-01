@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import HeroLight from "./HeroLight";
+import EclipseToy from "./EclipseToy";
 import { signOff, storyScreens } from "@/lib/story";
 import landscape from "@/public/images/hero/landscape.webp";
 
@@ -19,7 +21,7 @@ export default function Hero() {
       aria-labelledby="home-title"
       className="px-[var(--gutter)] pb-[var(--gutter)]"
     >
-      <div className="grain-on relative mx-auto max-w-[1600px] overflow-hidden rounded-md bg-night">
+      <div data-eclipse-host className="grain-on relative mx-auto max-w-[1600px] overflow-hidden rounded-md bg-night">
         <Image
           src={landscape}
           alt="An eclipse of a grey and a copper disc above a planet's horizon; dark hills and a river below, lit copper at dusk."
@@ -28,6 +30,11 @@ export default function Hero() {
           sizes="(min-width: 1600px) 1600px, 100vw"
           className="object-cover object-[85%_center] sm:object-[80%_center] lg:object-center"
         />
+
+        {/* the pointer is a spark that lights the picture */}
+        <HeroLight />
+        {/* the sky darkens when the eclipse at the end is made */}
+        <div className="eclipse-veil" aria-hidden="true" />
 
         {/* a soft shade behind the story on the dark hills, fading in from the sky */}
         <div className="story-shade" aria-hidden="true" />
@@ -50,6 +57,7 @@ export default function Hero() {
           <div className="enter mt-10 sm:mt-12" style={{ ["--i" as string]: 3 }}>
             <Link
               href="/skills"
+              data-magnetic
               className="group press inline-flex h-14 items-center gap-5 rounded-pill bg-ink pl-7 pr-6 text-[1rem] text-paper transition-colors duration-200 hover:bg-[color-mix(in_oklch,var(--ink),var(--copper)_28%)]"
             >
               View projects
@@ -65,7 +73,9 @@ export default function Hero() {
           return (
             <div
               key={s.title}
-              className="relative z-[2] flex min-h-[calc(100svh-var(--header-h)-var(--gutter))] items-center px-6 py-20 sm:px-10 lg:px-16"
+              className={`relative z-[2] flex min-h-[calc(100svh-var(--header-h)-var(--gutter))] flex-col justify-center gap-12 px-6 py-20 sm:px-10 lg:flex-row lg:items-center lg:px-16 ${
+                i === storyScreens.length - 1 ? "lg:justify-between" : "lg:justify-start"
+              }`}
             >
               <div data-reveal className="max-w-[34rem] text-paper">
                 <h2 className="font-display text-[clamp(2.3rem,1.3rem+3.4vw,4.6rem)] leading-[1.02] tracking-[-0.02em] [text-wrap:balance]">
@@ -80,9 +90,16 @@ export default function Hero() {
                   </p>
                 ))}
                 {i === storyScreens.length - 1 ? (
-                  <p className="mt-10 font-display text-[clamp(1.8rem,1.2rem+1.6vw,2.6rem)] leading-none">{signOff}</p>
+                  <p className="sign-off mt-10 font-display text-[clamp(1.8rem,1.2rem+1.6vw,2.6rem)] leading-none">
+                    {signOff}
+                  </p>
                 ) : null}
               </div>
+              {i === storyScreens.length - 1 ? (
+                <div data-reveal style={{ ["--i" as string]: 1 }} className="w-full max-w-[24rem] self-center lg:max-w-[30rem]">
+                  <EclipseToy />
+                </div>
+              ) : null}
             </div>
           );
         })}

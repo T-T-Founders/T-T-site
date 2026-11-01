@@ -88,6 +88,14 @@ too, without the page ever jumping. Every animation moves only `opacity` and
 - Home: one still picture (the eclipse over a planet, hills, a river at dusk)
   in a window; the three story screens over it only fade in once, like every
   other section. No pinning, no scroll-driven animation.
+- Touch & feel (client asked for a site you can "touch"):
+  - the pointer (or a finger) is a warm spark that lights the home picture;
+  - cards tilt toward the mouse with a glare; on phones the card in the middle
+    of the screen plays its drawing the way hover does on desktop;
+  - View projects and GitHub lean toward the mouse;
+  - the story ends with a toy: drag the copper disc onto the grey one; when they
+    meet in the eclipse of the mark the sky darkens and "T&T Labs" lights up.
+  Mouse effects are off under reduced motion; the toy works with arrow keys.
 - Section headings rise line by line, and cards rise in a short stagger, when
   they scroll into view (`data-reveal`, `components/RevealObserver.tsx`).
 - Route changes cross-fade through React `<ViewTransition>` (`PageTransition`).

@@ -29,6 +29,7 @@ export default function Applications() {
         {/* IZDAR: the lead plate. It has its own website. */}
         <div data-reveal>
           <article
+            data-tilt="4"
             className={`group press plate relative isolate flex h-full min-h-[500px] flex-col overflow-hidden rounded-md p-8 text-paper sm:min-h-[480px] sm:p-10 ${focusRing}`}
           >
             <div className="grain-on absolute inset-0 -z-10 opacity-90 max-sm:top-[38%] max-sm:opacity-70">
@@ -60,6 +61,7 @@ export default function Applications() {
           ].map(({ app, Plate, box }, i) => (
             <div key={app.slug} data-reveal style={{ ["--i" as string]: i + 1 }}>
               <article
+                data-tilt="6"
                 className={`group press relative flex h-full items-center justify-between gap-5 overflow-hidden rounded-md border border-line bg-raised p-7 transition-colors duration-300 hover:border-ink/40 sm:p-9 ${focusRing}`}
               >
                 <div className="flex min-w-0 flex-col self-stretch">

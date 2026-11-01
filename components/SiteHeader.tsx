@@ -148,6 +148,7 @@ export default function SiteHeader() {
         <div className="flex items-center gap-2 justify-self-end">
           <a
             href={orgGithub}
+            data-magnetic
             className={`group hidden h-11 items-center gap-2 rounded-pill border px-5 text-[0.95rem] transition-colors duration-200 md:inline-flex ${
               night
                 ? "border-paper/50 hover:bg-paper hover:text-night"

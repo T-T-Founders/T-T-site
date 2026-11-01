@@ -215,6 +215,175 @@ body {
   }
 }
 
+/* ---------- Touch & feel (components/Interactions.tsx, HeroLight, EclipseToy) ---------- */
+
+/* buttons lean toward the mouse */
+[data-magnetic] {
+  transform: translate3d(var(--mag-x, 0), var(--mag-y, 0), 0);
+  transition:
+    transform 0.6s var(--ease-out),
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+[data-magnetic][data-magnet-on] {
+  transition-duration: 0.18s, 0.2s, 0.2s, 0.2s;
+}
+
+/* cards tilt toward the mouse, with a light glare where it points */
+[data-tilt] {
+  transform: perspective(1100px) rotateX(var(--tilt-rx, 0deg)) rotateY(var(--tilt-ry, 0deg));
+  transition:
+    transform 0.7s var(--ease-out),
+    border-color 0.3s;
+}
+[data-tilt][data-tilting] {
+  transition:
+    transform 0.14s linear,
+    border-color 0.3s;
+}
+[data-tilt]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    color-mix(in oklch, white 30%, transparent),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out);
+}
+[data-tilt][data-tilting]::before {
+  opacity: 1;
+}
+/* touch: the card in the middle of the screen plays like a hovered one */
+.group[data-active="true"] .card-art {
+  transform: scale(1.045);
+}
+.group[data-active="true"] .card-arrow {
+  transform: translate3d(3px, -3px, 0);
+}
+.group[data-active="true"] .nudge-x {
+  transform: translate3d(5px, 0, 0);
+}
+
+/* the spark over the home picture */
+.hero-light,
+.hero-spark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+  will-change: transform;
+}
+.hero-light {
+  width: 44rem;
+  height: 44rem;
+  margin: -22rem 0 0 -22rem;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--copper), white 20%) 0%,
+    color-mix(in oklch, var(--copper) 75%, transparent) 26%,
+    transparent 66%
+  );
+  mix-blend-mode: soft-light;
+}
+.hero-spark {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin: -0.25rem 0 0 -0.25rem;
+  background: color-mix(in oklch, var(--paper), white 40%);
+  box-shadow:
+    0 0 0.6rem 0.2rem color-mix(in oklch, var(--copper), white 40%),
+    0 0 2.4rem 0.8rem color-mix(in oklch, var(--copper) 45%, transparent);
+}
+[data-lit] > .hero-light {
+  opacity: 1;
+}
+[data-lit] > .hero-spark {
+  opacity: 1;
+}
+@media (hover: none) {
+  .hero-light {
+    width: 26rem;
+    height: 26rem;
+    margin: -13rem 0 0 -13rem;
+  }
+}
+
+/* the eclipse at the end of the story */
+.eclipse-toy {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  touch-action: none;
+}
+.toy-handle {
+  cursor: grab;
+  outline: none;
+}
+.is-dragging .toy-handle {
+  cursor: grabbing;
+}
+.toy-handle:focus-visible .toy-copper {
+  stroke: var(--paper);
+  stroke-width: 3;
+}
+.toy-corona {
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  transform: scale(0.7);
+  transition:
+    opacity 1.2s var(--ease-out),
+    transform 1.6s var(--ease-out);
+}
+.is-locked .toy-corona {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* the copper disc breathes until someone picks it up */
+  .eclipse-toy:not(.is-locked):not(.is-dragging) .toy-copper {
+    animation: toy-float 3.2s ease-in-out infinite;
+  }
+}
+@keyframes toy-float {
+  50% {
+    transform: translate(-6px, -5px);
+  }
+}
+.eclipse-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: color-mix(in oklch, var(--night) 55%, transparent);
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out);
+}
+[data-eclipse] > .eclipse-veil {
+  opacity: 1;
+}
+.sign-off {
+  transition:
+    color 1.2s var(--ease-out),
+    text-shadow 1.2s var(--ease-out);
+}
+[data-eclipse] .sign-off {
+  color: color-mix(in oklch, var(--copper), white 35%);
+  text-shadow: 0 0 1.4rem color-mix(in oklch, var(--copper) 70%, transparent);
+}
+
 /* ---------- Project plates ---------- */
 
 .plate {

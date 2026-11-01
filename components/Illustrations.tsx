@@ -55,7 +55,7 @@ export function TkrsPlate() {
         width={size + 6}
         height={size + 6}
         rx="7"
-        className={`fill-copper/15 stroke-copper ${t} group-hover:opacity-0 group-focus-within:opacity-0`}
+        className={`fill-copper/15 stroke-copper ${t} group-hover:opacity-0 group-data-[active=true]:opacity-0 group-focus-within:opacity-0`}
         strokeWidth="1.5"
       />
       <rect
@@ -64,7 +64,7 @@ export function TkrsPlate() {
         width={size + 6}
         height={size + 6}
         rx="7"
-        className={`fill-copper/15 stroke-copper opacity-0 ${t} group-hover:opacity-100 group-focus-within:opacity-100`}
+        className={`fill-copper/15 stroke-copper opacity-0 ${t} group-hover:opacity-100 group-data-[active=true]:opacity-100 group-focus-within:opacity-100`}
         strokeWidth="1.5"
       />
     </svg>
@@ -93,7 +93,7 @@ export function CdesignPlate() {
       <rect x="248" y="40" width="20" height="5" rx="2" className="fill-paper/30" />
       <g clipPath="url(#cd-hero)">
         <rect x="52" y="58" width="216" height="104" className="fill-night" />
-        <g className={`${t} duration-[900ms] group-hover:-translate-x-6 group-focus-within:-translate-x-6`}>
+        <g className={`${t} duration-[900ms] group-hover:-translate-x-6 group-data-[active=true]:-translate-x-6 group-focus-within:-translate-x-6`}>
           <path d="M30 170 C 120 160, 190 110, 300 50" fill="none" stroke="url(#cd-silk)" strokeWidth="14" opacity="0.35" />
           <path d="M40 175 C 130 160, 200 120, 310 70" fill="none" stroke="url(#cd-silk)" strokeWidth="5" />
           <path d="M60 180 C 150 165, 220 135, 320 95" fill="none" stroke="url(#cd-silk)" strokeWidth="2" opacity="0.8" />
@@ -127,7 +127,7 @@ export function LuauPlate() {
         Players.PlayerAdded:Connect(<tspan className="fill-copper">function</tspan>(player)
       </text>
       {/* line 4: legacy wait() is flagged, then replaced by task.wait() */}
-      <g className={`${t} group-hover:opacity-0 group-focus-within:opacity-0`}>
+      <g className={`${t} group-hover:opacity-0 group-data-[active=true]:opacity-0 group-focus-within:opacity-0`}>
         <text x="32" y={y(4)} className={code} xmlSpace="preserve">
           {"    "}wait(1)
         </text>
@@ -140,7 +140,7 @@ export function LuauPlate() {
       <text
         x="32"
         y={y(4)}
-        className={`fill-paper font-mono text-[10.5px] opacity-0 ${t} group-hover:opacity-100 group-focus-within:opacity-100`}
+        className={`fill-paper font-mono text-[10.5px] opacity-0 ${t} group-hover:opacity-100 group-data-[active=true]:opacity-100 group-focus-within:opacity-100`}
         xmlSpace="preserve"
       >
         {"    "}task.wait(1)
@@ -185,7 +185,7 @@ export function Tk3dPlate() {
       ))}
       <ellipse cx="160" cy="214" rx="54" ry="9" className="fill-black/40" />
       <g
-        className={`origin-[160px_118px] ${t} duration-700 group-hover:rotate-[24deg] group-focus-within:rotate-[24deg]`}
+        className={`origin-[160px_118px] ${t} duration-700 group-hover:rotate-[24deg] group-data-[active=true]:rotate-[24deg] group-focus-within:rotate-[24deg]`}
       >
         {edges.map(([a, b], i) => (
           <line
@@ -263,7 +263,7 @@ export function VeloPlate() {
         cy="100"
         r="70"
         transform="rotate(-90 100 100)"
-        className={`fill-none stroke-copper ${t} duration-700 [stroke-dashoffset:var(--o)] group-hover:[stroke-dashoffset:var(--h)] group-focus-within:[stroke-dashoffset:var(--h)]`}
+        className={`fill-none stroke-copper ${t} duration-700 [stroke-dashoffset:var(--o)] group-hover:[stroke-dashoffset:var(--h)] group-data-[active=true]:[stroke-dashoffset:var(--h)] group-focus-within:[stroke-dashoffset:var(--h)]`}
         strokeWidth="22"
         strokeDasharray={c}
         style={{ ["--o" as string]: c * 0.62, ["--h" as string]: c * 0.12 }}
@@ -279,7 +279,7 @@ export function MypcPlate() {
     <svg viewBox="0 0 200 170" className="h-full w-full" aria-hidden="true">
       <rect x="10" y="8" width="180" height="116" rx="7" className="fill-ink/80" />
       <rect x="18" y="16" width="164" height="100" rx="3" className="fill-[color-mix(in_oklch,var(--paper),var(--ink)_22%)]" />
-      <g className={`opacity-0 ${t} group-hover:opacity-100 group-focus-within:opacity-100`}>
+      <g className={`opacity-0 ${t} group-hover:opacity-100 group-data-[active=true]:opacity-100 group-focus-within:opacity-100`}>
         <rect x="18" y="16" width="164" height="100" rx="3" className="fill-ink" />
         <rect x="88" y="62" width="24" height="20" rx="3" className="fill-copper" />
         <path d="M93 62v-6a7 7 0 0 1 14 0v6" className="fill-none stroke-copper" strokeWidth="3" />
@@ -345,7 +345,7 @@ export function GamePlate() {
       <rect width="1200" height="520" fill="url(#gp-sky)" />
 
       {/* the swallowed sun */}
-      <g className={`${t} duration-700 origin-[900px_190px] group-hover:scale-[1.06] group-focus-within:scale-[1.06]`}>
+      <g className={`${t} duration-700 origin-[900px_190px] group-hover:scale-[1.06] group-data-[active=true]:scale-[1.06] group-focus-within:scale-[1.06]`}>
         <circle cx="900" cy="190" r="170" fill="url(#gp-corona)" />
         <circle
           cx="900"
@@ -354,7 +354,7 @@ export function GamePlate() {
           fill="none"
           strokeWidth="10"
           filter="url(#gp-glow)"
-          className={`stroke-copper opacity-70 ${t} group-hover:opacity-100 group-focus-within:opacity-100`}
+          className={`stroke-copper opacity-70 ${t} group-hover:opacity-100 group-data-[active=true]:opacity-100 group-focus-within:opacity-100`}
         />
         <circle cx="900" cy="190" r="62" fill="none" strokeWidth="2.5" style={{ stroke: "color-mix(in oklch, var(--copper), var(--paper) 45%)" }} />
         <circle cx="900" cy="190" r="60.5" style={{ fill: "color-mix(in oklch, var(--night), black 45%)" }} />

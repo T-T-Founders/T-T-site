@@ -11,7 +11,7 @@ export default function Games() {
         <SectionTitle as="h1" id="games-title" roman="One game," italic="in development." />
 
         <div data-reveal className="mt-12 sm:mt-16">
-          <article className="group press relative isolate overflow-hidden rounded-md has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-copper">
+          <article data-tilt="3" className="group press relative isolate overflow-hidden rounded-md has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-copper">
             <div className="grain-on absolute inset-0 -z-20 max-md:bottom-[42%]">
               <LazyMount>
                 <div className="card-art absolute inset-0">
