@@ -133,11 +133,12 @@ philosophy; each division has its own route.
 ```
 /              one picture in a rounded window with paper around it
                (public/images/hero/landscape.webp, grain on top), and the story
-               over it in three screens (lib/story.ts):
-                 1 "It began with something small."          on the pale sky
-                 2 "One light caught another."               on the dark hills
-                 3 "When two orbits meet, the sky changes."  ... "T&T Labs"
-               narrow windows show the eclipse first, then the copy below it
+               over it, top to bottom:
+                 hero: "We build tools, apps and games." + View projects (-> /skills),
+                       on the pale sky, the picture's eclipse beside it
+                 then the story in three screens on the dark hills (lib/story.ts):
+                 "It began with something small." / "One light caught another." /
+                 "When two orbits meet, the sky changes." ... "T&T Labs"
                nothing else: the divisions are reached from the header only
 /skills        "Skills for AI agents."  four plates -> GitHub
 /applications  "Software for Windows and industry."  IZDAR lead + two plates

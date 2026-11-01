@@ -153,11 +153,11 @@ body {
 
 /* ---------- Home picture (components/Hero.tsx) ---------- */
 
-/* Shade behind the copy on the dark hills: covers screens 2 and 3, fades in
-   from the sky above, darkest on the side where the text sits. */
+/* Shade behind the story on the dark hills: everything below the hero screen,
+   fading in from the sky above, darkest on the side where the text sits. */
 .story-shade {
   position: absolute;
-  inset: calc(100% / 3) 0 0 0;
+  inset: 22% 0 0 0;
   z-index: 1;
   pointer-events: none;
   background: linear-gradient(
@@ -171,7 +171,7 @@ body {
 }
 @media (max-width: 1023px) {
   .story-shade {
-    inset: 19% 0 0 0;
+    inset: 21% 0 0 0;
     background: color-mix(in oklch, var(--night) 44%, transparent);
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 6%);
     mask-image: linear-gradient(180deg, transparent 0%, #000 6%);
@@ -198,6 +198,20 @@ body {
 @keyframes line-up {
   from {
     transform: translate3d(0, 105%, 0);
+  }
+}
+
+/* hero button: one entry on load, after the headline */
+@media (prefers-reduced-motion: no-preference) {
+  .enter {
+    animation: enter 0.9s var(--ease-out) both;
+    animation-delay: calc(0.25s + var(--i, 0) * 0.12s);
+  }
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
 }
 

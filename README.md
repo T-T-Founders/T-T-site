@@ -20,7 +20,7 @@ No animation library: motion is CSS plus one small reveal observer
 
 | Route | Content |
 |---|---|
-| `/` | One picture with the team's story over it in three screens (copy in `lib/story.ts`) |
+| `/` | Hero, then the team's story in three screens, over one picture (copy in `lib/story.ts`) |
 | `/skills` | Four agent skills, each linking to its GitHub repository |
 | `/applications` | IZDAR Industrial, VeloBoost, MyPC |
 | `/games` | Chernaya Tamga |
